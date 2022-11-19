@@ -1,7 +1,6 @@
 using UnityEngine;
 using Microsoft.MixedReality.Toolkit;
 using Microsoft.MixedReality.Toolkit.SpatialAwareness;
-using Microsoft.MixedReality.Toolkit.SpatialObjectMeshObserver;
 
 
 public class butt : MonoBehaviour
