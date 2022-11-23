@@ -25,8 +25,8 @@ MonoBehaviour:
   instantiationBatchRate: 1
   defaultMaterial: {fileID: 2100000, guid: c6bd404f506e1894289fde7b1689f901, type: 2}
   defaultWorldMeshMaterial: {fileID: 2100000, guid: 47c3d3b0d8143e3489351498fceed55d, type: 2}
-  shouldLoadFromFile: 1
-  serializedScene: {fileID: 4900000, guid: 60afa97ae67aa8044b1a2239396b5647, type: 3}
+  shouldLoadFromFile: 0
+  serializedScene: {fileID: 0}
   createGameObjects: 1
   requestPlaneData: 1
   requestMeshData: 1
