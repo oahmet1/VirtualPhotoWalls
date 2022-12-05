@@ -1,8 +1,6 @@
-using game_objects.Photograph;
-using game_objects.Wall;
 
 interface ILayoutAlgorithm {
-    void GenerateLayout(Photgraph[] photos, Wall wall);
+    void GenerateLayout(Photograph[] photos, Wall wall);
 }
 
 class RandomLayoutAlgorithm : ILayoutAlgorithm {
@@ -14,11 +12,12 @@ class RandomLayoutAlgorithm : ILayoutAlgorithm {
         float[] boundsZ = wall.GetBoundsZ();
 
         for (int i=0; i < photos.Length; i++) {
-            float x = rnd.Next(-boundsX[0], boundsX[1]);
-            float y = rnd.Next(-boundsY[0], boundsY[1]);
-            float z = rnd.Next(-boundsZ[0], boundsZ[1]);
+            float x = boundsX[0] + (float)rnd.NextDouble() * (-boundsX[0] + boundsX[1]);
+            float y = boundsY[0] + (float)rnd.NextDouble() * (-boundsY[0] + boundsY[1]);
+            float z = boundsZ[0] + (float)rnd.NextDouble() * (-boundsZ[0] + boundsZ[1]);
 
             photos[i].SetPosition(x, y, z);
+            photos[i].SetDisplayed(true);
         }
     }
 } 
@@ -32,9 +31,9 @@ class NoOverlapRandomLayoutAlgorithm : ILayoutAlgorithm {
         float[] boundsZ = wall.GetBoundsZ();
 
         for (int i=0; i < photos.Length; i++) {
-            float x = rnd.Next(-boundsX[0], boundsX[1]);
-            float y = rnd.Next(-boundsY[0], boundsY[1]);
-            float z = rnd.Next(-boundsZ[0], boundsZ[1]);
+            float x = boundsX[0] + (float) rnd.NextDouble()*(-boundsX[0] + boundsX[1]);
+            float y = boundsY[0] + (float)rnd.NextDouble() * (-boundsY[0] + boundsY[1]);
+            float z = boundsZ[0] + (float)rnd.NextDouble() * (-boundsZ[0] + boundsZ[1]);
 
             bool valid = true;
             for (int j=0; j<i; j++){
@@ -44,7 +43,7 @@ class NoOverlapRandomLayoutAlgorithm : ILayoutAlgorithm {
             }
             if (valid){
                 photos[i].SetPosition(x, y, z);
-                photos[i].displayed = true;
+                photos[i].SetDisplayed(true);
             }
         }
     }

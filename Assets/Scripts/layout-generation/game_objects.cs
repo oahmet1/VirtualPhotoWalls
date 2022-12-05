@@ -1,13 +1,13 @@
 using UnityEngine;
 
-public class Photograph : MonoBehaviour
+public class Photograph
 {
     float x;
     float y;
     float z;
     float width;
     float height;
-    bool displayed;
+    public bool displayed;
     public Photograph(float x, float y, float z, float width, float height)
     {
         this.x = x;
@@ -30,6 +30,10 @@ public class Photograph : MonoBehaviour
         this.y = y;
         this.z = z;
     }
+    public void SetDisplayed(bool b)
+    {
+        this.displayed=b;
+    }
 
     public bool IsOverlapping(Photograph photo){
         if (this.x + this.width < photo.x || photo.x + photo.width < this.x){
@@ -44,34 +48,34 @@ public class Photograph : MonoBehaviour
     }
 }
 
-public class Wall : MonoBehaviour
+public class Wall
 {
-    float x;
-    float y;
-    float z;
+    float[] centerCoordinates;
+    float[] rotationAngles;
     float width;
     float height;
-    public Wall(float x, float y, float z, float width, float height)
+    public Wall(float[] centerCoordinates, float[] rotationAngles, float width, float height )
     {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+        this.centerCoordinates = centerCoordinates;
+        this.rotationAngles = rotationAngles;
         this.width = width;
         this.height = height;
     }
     
     public void Draw(){
         var photo = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        photo.transform.localScale = new Vector3(this.width, this.height, (float) 0.1);
-        photo.transform.position = new Vector3(this.x, this.y, this.z);
+        photo.transform.localScale = new Vector3(this.width, this.height, 0.1f);
+        photo.transform.position = new Vector3(this.centerCoordinates[0], this.centerCoordinates[1], this.centerCoordinates[2]);
+        //photo.transform.rotation = new Vector3((float)0, (float)1, (float)0);
+        photo.transform.Rotate(this.rotationAngles[0], this.rotationAngles[1], this.rotationAngles[2]);
     }
 
     public float[] GetBoundsX(){
-        return new float[]{this.x - this.width/2, this.x + this.width/2};
+        return new float[] { this.centerCoordinates[0] - this.width/2, this.centerCoordinates[0] + this.width/2};
     }
 
     public float[] GetBoundsY(){
-        return new float[]{this.y - this.height/2, this.y + this.height/2};
+        return new float[]{this.centerCoordinates[1] - this.height/2, this.centerCoordinates[1] + this.height/2};
     }
 
     public float[] GetBoundsZ(){
