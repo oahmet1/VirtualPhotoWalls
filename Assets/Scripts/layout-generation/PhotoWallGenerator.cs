@@ -1,51 +1,55 @@
 using UnityEngine;
+using System.Collections;
 
 public class Layout
 {
-    private int[] indices;
-    public Layout(int[] indices)
+    private Photograph[] photos;
+
+    public Layout(Photograph[] photos)
     {
-        this.indices = indices;
+        this.photos = photos;
     }
 
-    public void Draw(Photograph[] photos){
-        for (int i = 0; i < this.indices.Length; i++)
-        {
-            photos[this.indices[i]].Draw();
+    public void Draw(Transform transform){
+        foreach(Photograph photo in photos){
+            photo.Draw(transform);
         }
     }
 }
 
 public class PhotoWallGenerator
 {
-    private Walls[] walls;
+    private Wall[] walls;
     private Photograph[] photos;
 
-    public PhotoWallGenerator(Wall[] walls, Photograph[] photos, String algorithm)
+    private string algorithm;
+
+    public PhotoWallGenerator(Wall[] walls, Photograph[] photos, string algorithm)
     {
         this.walls = walls;
         this.photos = photos;
         this.algorithm = algorithm;
     }
 
-    void GenerateLayout()
+    public void GenerateLayout()
     {
         NoOverlapRandomLayoutAlgorithm algo = new NoOverlapRandomLayoutAlgorithm();
-        Layout[] layouts = new Layouts[walls.Length];
+        Layout[] layouts = new Layout[walls.Length];
         for (int i = 0; i < walls.Length; i++)
         {
-            //layouts[i] = algo.GenerateLayout(walls[i], photos);
+            layouts[i] = algo.GenerateLayout(photos ,walls[i] );
         }
 
-        for (Wall wall : walls)
+        Transform[] wallTransforms = new Transform[walls.Length];
+        for (int i = 0; i < walls.Length; i++)
         {
-            wall.Draw();
+            wallTransforms[i] = walls[i].Draw();
         }
 
-        //for (Layout layout : layouts)
-        //{
-        //    layout.Draw(photos);
-        //}
+        for (int i = 0; i < walls.Length; i++)
+        {
+            layouts[i].Draw(wallTransforms[i]);
+        }	
     }
 
     // Update is called once per frame

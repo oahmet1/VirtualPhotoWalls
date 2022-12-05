@@ -7,22 +7,21 @@ public class Photograph
     float z;
     float width;
     float height;
-    public bool displayed;
-    public Photograph(float x, float y, float z, float width, float height)
+
+    public Photograph(float width, float height)
     {
-        this.x = x;
-        this.y = y;
-        this.z = z;
         this.width = width;
         this.height = height;
-        this.displayed = false;
+    }
+    public Photograph createCopy()
+    {
+        return new Photograph(width, height);
     }
     
-    public void Draw(){
+    public void Draw(Transform parent){
         // ToDo: Apply photograph texture to the rectangle
         var photo = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        photo.transform.localScale = new Vector3(this.width, this.height, (float) 0.01);
-        photo.transform.position = new Vector3(this.x, this.y, this.z);
+        photo.transform.parent = parent;
     }
 
     public void SetPosition(float x, float y, float z){
@@ -30,17 +29,11 @@ public class Photograph
         this.y = y;
         this.z = z;
     }
-    public void SetDisplayed(bool b)
-    {
-        this.displayed=b;
-    }
 
     public bool IsOverlapping(Photograph photo){
         if (this.x + this.width < photo.x || photo.x + photo.width < this.x){
             return false;
         } else if (this.y + this.height < photo.y || photo.y + photo.height < this.y){
-            return false;
-        } else if (this.z + this.height < photo.z || photo.z + photo.height < this.z){
             return false;
         } else {
             return true;
@@ -62,24 +55,23 @@ public class Wall
         this.height = height;
     }
     
-    public void Draw(){
-        var photo = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        photo.transform.localScale = new Vector3(this.width, this.height, 0.1f);
-        photo.transform.position = new Vector3(this.centerCoordinates[0], this.centerCoordinates[1], this.centerCoordinates[2]);
+    public Transform Draw(){
+        var wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        wall.transform.localScale = new Vector3(this.width, this.height, 0.1f);
+        wall.transform.position = new Vector3(this.centerCoordinates[0], this.centerCoordinates[1], this.centerCoordinates[2]);
         //photo.transform.rotation = new Vector3((float)0, (float)1, (float)0);
-        photo.transform.Rotate(this.rotationAngles[0], this.rotationAngles[1], this.rotationAngles[2]);
+        wall.transform.Rotate(this.rotationAngles[0], this.rotationAngles[1], this.rotationAngles[2]);
+        return wall.transform;
     }
 
     public float[] GetBoundsX(){
-        float[] bounds = new float[2];
-        return bounds;
+        return new float[]{-this.width/2, this.width/2};
     }
 
     public float[] GetBoundsY(){
-        return new float[]{this.centerCoordinates[1] - this.height/2, this.centerCoordinates[1] + this.height/2};
+        return new float[]{-this.height/2, this.height/2};
     }
 
-    public float[] GetBoundsZ(){
-        return new float[]{this.z - this.height/2, this.z + this.height/2};
-    }
+
+
 }
