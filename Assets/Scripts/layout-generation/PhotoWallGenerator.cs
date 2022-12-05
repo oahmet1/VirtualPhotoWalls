@@ -1,28 +1,51 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class PhotoWallGenerator : MonoBehaviour
+public class Layout
 {
-    // Start is called before the first frame update
-    void Start()
+    private int[] indices;
+    public Layout(int[] indices)
     {
-        Wall wall = new Wall(0, 0, 0, 100, 100);
-        Photograph[] photos = new Photograph[10];
-        for(int i = 0; i < photos.Length; i++)
+        this.indices = indices;
+    }
+
+    public void Draw(Photograph[] photos){
+        for (int i = 0; i < this.indices.Length; i++)
         {
-            photos[i] = new Photograph(10, 10, 10, 3, 3);
+            photos[this.indices[i]].Draw();
         }
+    }
+}
+
+public class PhotoWallGenerator
+{
+    private Walls[] walls;
+    private Photograph[] photos;
+
+    public PhotoWallGenerator(Wall[] walls, Photograph[] photos, String algorithm)
+    {
+        this.walls = walls;
+        this.photos = photos;
+        this.algorithm = algorithm;
+    }
+
+    void GenerateLayout()
+    {
         NoOverlapRandomLayoutAlgorithm algo = new NoOverlapRandomLayoutAlgorithm();
-        algo.GenerateLayout(photos, wall);
-        for (int i = 0; i < photos.Length; i++)
+        Layout[] layouts = new Layouts[walls.Length];
+        for (int i = 0; i < walls.Length; i++)
         {
-            if (photos[i].displayed)
-            {
-                photos[i].Draw();
-            }
+            //layouts[i] = algo.GenerateLayout(walls[i], photos);
         }
-        wall.Draw();
+
+        for (Wall wall : walls)
+        {
+            wall.Draw();
+        }
+
+        //for (Layout layout : layouts)
+        //{
+        //    layout.Draw(photos);
+        //}
     }
 
     // Update is called once per frame

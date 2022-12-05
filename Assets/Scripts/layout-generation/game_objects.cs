@@ -71,7 +71,8 @@ public class Wall
     }
 
     public float[] GetBoundsX(){
-        return new float[] { this.centerCoordinates[0] - this.width/2, this.centerCoordinates[0] + this.width/2};
+        float[] bounds = new float[2];
+        return bounds;
     }
 
     public float[] GetBoundsY(){
