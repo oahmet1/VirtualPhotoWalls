@@ -1,8 +1,11 @@
 using UnityEngine;
+using System.IO;
 
 public class Photograph
 {
     float x, y, z, width, height;
+
+     public TextAsset imageAsset;
 
     public Photograph(float width, float height)
     {
@@ -31,6 +34,17 @@ public class Photograph
         //photo.transform.Rotate(rotationAngles[0], rotationAngles[1], rotationAngles[2]);
         photo.transform.parent = parent;
         photo.transform.position += new Vector3(x/20, y/20, -1f);
+
+        byte[] bytes = File.ReadAllBytes("Assets/Images/test.jpeg");
+        Texture2D texture = new Texture2D(2, 2);
+        texture.LoadImage(bytes);
+
+        Material imageMaterial =new Material(Shader.Find("Unlit/Texture"));
+        imageMaterial.SetTexture("_MainTex", texture);
+        
+        Renderer imageRenderer =photo.GetComponent<Renderer>();
+        imageRenderer.material = imageMaterial;
+    
     }
 
     public void SetPosition(float x, float y, float z){
