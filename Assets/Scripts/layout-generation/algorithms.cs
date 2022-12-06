@@ -31,6 +31,7 @@ class NoOverlapRandomLayoutAlgorithm : ILayoutAlgorithm {
         for (int i=0; i < photos.Length; i++) {
             float x = boundsX[0] + (float) rnd.NextDouble() * (-boundsX[0] + boundsX[1]);
             float y = boundsY[0] + (float)rnd.NextDouble() * (-boundsY[0] + boundsY[1]);
+            photos[i].SetPosition(x, y, 0.1f);
 
             bool valid = true;
             for (int j=0; j<i; j++){

@@ -12,10 +12,10 @@ public class mymain : MonoBehaviour
         detected_walls[2] = new Wall(new float[] {20f,20f,20f}, new float[]{20f,20f,20f}, 10f, 10f);  // ToDo: fill in correct parameters
 
         Photograph[] photos = new Photograph[4]; // ToDo: Get photos
-        photos[0] = new Photograph(1,2); // ToDo: fill in correct parameters
-        photos[1] = new Photograph(2,1); // ToDo: fill in correct parameters
-        photos[2] = new Photograph(1,1); // ToDo: fill in correct parameters
-        photos[3] = new Photograph(1,1); // ToDo: fill in correct parameters
+        photos[0] = new Photograph(2,2); // ToDo: fill in correct parameters
+        photos[1] = new Photograph(2,2); // ToDo: fill in correct parameters
+        photos[2] = new Photograph(2,2); // ToDo: fill in correct parameters
+        photos[3] = new Photograph(2,2); // ToDo: fill in correct parameters
 
         PhotoWallGenerator generator = new PhotoWallGenerator(detected_walls, photos, "NoOverlapRandom");
         generator.GenerateLayout();

@@ -2,11 +2,7 @@ using UnityEngine;
 
 public class Photograph
 {
-    float x;
-    float y;
-    float z;
-    float width;
-    float height;
+    float x, y, z, width, height;
 
     public Photograph(float width, float height)
     {
@@ -21,7 +17,9 @@ public class Photograph
     public void Draw(Transform parent){
         // ToDo: Apply photograph texture to the rectangle
         var photo = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        photo.transform.parent = parent;
+        photo.transform.localScale = new Vector3(width, height, 0.01f);
+        photo.transform.localPosition = new Vector3(x, y, z) + parent.localPosition;
+        photo.transform.rotation = parent.rotation;
     }
 
     public void SetPosition(float x, float y, float z){
@@ -43,10 +41,8 @@ public class Photograph
 
 public class Wall
 {
-    float[] centerCoordinates;
-    float[] rotationAngles;
-    float width;
-    float height;
+    float[] centerCoordinates, rotationAngles;
+    float width, height;
     public Wall(float[] centerCoordinates, float[] rotationAngles, float width, float height )
     {
         this.centerCoordinates = centerCoordinates;

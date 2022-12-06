@@ -48,7 +48,9 @@ public class PhotoWallGenerator
 
         for (int i = 0; i < walls.Length; i++)
         {
+
             layouts[i].Draw(wallTransforms[i]);
+            Debug.Log("Layout " + i + " has " + wallTransforms[i].localScale);
         }	
     }
 
