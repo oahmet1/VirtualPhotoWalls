@@ -9,17 +9,27 @@ public class Photograph
         this.width = width;
         this.height = height;
     }
+
+    public Photograph(float width, float height, float x, float y, float z)
+    {
+        this.width = width;
+        this.height = height;
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
     public Photograph createCopy()
     {
-        return new Photograph(width, height);
+        return new Photograph(width, height, x, y, z);
     }
     
-    public void Draw(Transform parent){
+    public void Draw(float[] rotationAngles, float[] centerCoordinates){
         // ToDo: Apply photograph texture to the rectangle
         var photo = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        photo.transform.localScale = new Vector3(width, height, 0.01f);
-        photo.transform.localPosition = new Vector3(x, y, z) + parent.localPosition;
-        photo.transform.rotation = parent.rotation;
+        photo.transform.localScale = new Vector3(width, height, 0.1f);
+        photo.transform.localPosition = new Vector3(x, y, z) + new Vector3(centerCoordinates[0], centerCoordinates[1], centerCoordinates[2]);
+        photo.transform.Rotate(rotationAngles[0], rotationAngles[1], rotationAngles[2]);
     }
 
     public void SetPosition(float x, float y, float z){
@@ -41,7 +51,7 @@ public class Photograph
 
 public class Wall
 {
-    float[] centerCoordinates, rotationAngles;
+    public float[] centerCoordinates, rotationAngles;
     float width, height;
     public Wall(float[] centerCoordinates, float[] rotationAngles, float width, float height )
     {
@@ -51,13 +61,12 @@ public class Wall
         this.height = height;
     }
     
-    public Transform Draw(){
+    public void Draw(){
         var wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
         wall.transform.localScale = new Vector3(this.width, this.height, 0.1f);
         wall.transform.position = new Vector3(this.centerCoordinates[0], this.centerCoordinates[1], this.centerCoordinates[2]);
         //photo.transform.rotation = new Vector3((float)0, (float)1, (float)0);
         wall.transform.Rotate(this.rotationAngles[0], this.rotationAngles[1], this.rotationAngles[2]);
-        return wall.transform;
     }
 
     public float[] GetBoundsX(){

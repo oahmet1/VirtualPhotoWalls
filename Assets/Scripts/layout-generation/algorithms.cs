@@ -41,7 +41,7 @@ class NoOverlapRandomLayoutAlgorithm : ILayoutAlgorithm {
             }
             if (valid){
                 Photograph copy = photos[i].createCopy();
-                copy.SetPosition(x, y, 1);
+                copy.SetPosition(x, y, 0.1f);
                 displayedPhotos.Add(copy);
             }
         }
