@@ -10,9 +10,9 @@ public class Layout
         this.photos = photos;
     }
 
-    public void Draw(float[] rotationAngles, float[] centerCoordinates){
+    public void Draw(float[] rotationAngles, float[] centerCoordinates, Transform parent){
         foreach(Photograph photo in photos){
-            photo.Draw(rotationAngles, centerCoordinates);
+            photo.Draw(rotationAngles, centerCoordinates, parent);
         }
     }
 }
@@ -42,15 +42,17 @@ public class PhotoWallGenerator
 
         for (int i = 0; i < walls.Length; i++)
         {
-            walls[i].Draw();
-        }
+
+            layouts[i].Draw(walls[i].rotationAngles, walls[i].centerCoordinates, walls[i].transform);
+            Debug.Log("Layout " + i + " has angles" + walls[i].rotationAngles);
+        }	
 
         for (int i = 0; i < walls.Length; i++)
         {
+            walls[i].Draw();
+        }
 
-            layouts[i].Draw(walls[i].rotationAngles, walls[i].centerCoordinates);
-            Debug.Log("Layout " + i + " has angles" + walls[i].rotationAngles);
-        }	
+        
     }
 
     // Update is called once per frame
