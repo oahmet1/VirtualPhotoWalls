@@ -12,7 +12,7 @@ public class Photograph
     public Photograph(float width, float height, string texturePath)
     {
         this.aspectRatio = width / height;
-        this.height = 1f;
+        this.height = 0.1f;
         this.width = this.aspectRatio * this.height;
         this.texturePath = texturePath;
     }
@@ -36,7 +36,7 @@ public class Photograph
     public void Draw(float[] rotationAngles, float[] centerCoordinates, Transform parent, Wall wall){
         // ToDo: Apply photograph texture to the rectangle
         var photo = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        photo.transform.localScale = new Vector3(this.width/wall.width, this.height/wall.height, 1f);
+        photo.transform.localScale = new Vector3(this.width/wall.width, this.height/wall.height, 0.1f);
         //photo.transform.Rotate(rotationAngles[0], rotationAngles[1], rotationAngles[2]);
         photo.transform.parent = parent;
         photo.transform.position += new Vector3(x/wall.width, y/wall.height, 1f);

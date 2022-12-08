@@ -5,13 +5,19 @@ using UnityEngine;
 
 public class mymain : MonoBehaviour
 {
-    void Start()
+    private Wall[] walls;
+    public mymain(Wall[] walls)
     {
-        Wall[] detected_walls = new Wall[3]; // ToDo: Get walls from the camera
+        this.walls = walls;
+    }
+
+    public void NoStart()
+    {
+        /*Wall[] detected_walls = new Wall[3]; // ToDo: Get walls from the camera
         detected_walls[0] = new Wall(new float[] {0f,0f,0f}, new float[]{0f,0f,0f}, 10f, 10f);  // ToDo: fill in correct parameters
         detected_walls[1] = new Wall(new float[] {10f,10f,10f}, new float[]{10f,10f,10f}, 10f, 30f);  // ToDo: fill in correct parameters
         detected_walls[2] = new Wall(new float[] {20f,20f,20f}, new float[]{20f,20f,20f}, 30f, 10f);  // ToDo: fill in correct parameters
-
+*/
         // read all phtographs from the folder
         string path = "Assets/Images/";
         string[] files = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".jpg") || s.EndsWith(".png") || s.EndsWith(".jpeg") || s.EndsWith(".bmp") || s.EndsWith(".tiff")).ToArray();
@@ -29,7 +35,7 @@ public class mymain : MonoBehaviour
             photos[i] = new Photograph(width, height, files[i]);
         }
 
-        PhotoWallGenerator generator = new PhotoWallGenerator(detected_walls, photos, "NoOverlapRandom");
+        PhotoWallGenerator generator = new PhotoWallGenerator(this.walls, photos, "NoOverlapRandom");
         generator.GenerateLayout();
     }
 
