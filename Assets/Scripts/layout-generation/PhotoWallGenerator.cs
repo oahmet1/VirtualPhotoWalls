@@ -10,9 +10,9 @@ public class Layout
         this.photos = photos;
     }
 
-    public void Draw(float[] rotationAngles, float[] centerCoordinates, Transform parent){
+    public void Draw(float[] rotationAngles, float[] centerCoordinates, Transform parent, Wall wall){
         foreach(Photograph photo in photos){
-            photo.Draw(rotationAngles, centerCoordinates, parent);
+            photo.Draw(rotationAngles, centerCoordinates, parent, wall);
         }
     }
 }
@@ -43,7 +43,7 @@ public class PhotoWallGenerator
         for (int i = 0; i < walls.Length; i++)
         {
 
-            layouts[i].Draw(walls[i].rotationAngles, walls[i].centerCoordinates, walls[i].transform);
+            layouts[i].Draw(walls[i].rotationAngles, walls[i].centerCoordinates, walls[i].transform, walls[i]);
             Debug.Log("Layout " + i + " has angles" + walls[i].rotationAngles);
         }	
 

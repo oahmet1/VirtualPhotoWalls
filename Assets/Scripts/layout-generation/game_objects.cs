@@ -3,39 +3,56 @@ using System.IO;
 
 public class Photograph
 {
-    float x, y, z, width, height;
+    float x, y, z, width, height, aspectRatio;
+    string texturePath;
+    Wall wall;
 
      public TextAsset imageAsset;
 
-    public Photograph(float width, float height)
+    public Photograph(float width, float height, string texturePath)
     {
-        this.width = width;
-        this.height = height;
+        this.aspectRatio = width / height;
+        this.height = 1f;
+        this.width = this.aspectRatio * this.height;
+        this.texturePath = texturePath;
     }
 
-    public Photograph(float width, float height, float x, float y, float z)
+    public Photograph(float width, float height, float x, float y, float z, string texturePath)
     {
         this.width = width;
         this.height = height;
         this.x = x;
         this.y = y;
         this.z = z;
+        this.texturePath = texturePath;
+
     }
 
     public Photograph createCopy()
     {
-        return new Photograph(width, height, x, y, z);
+        return new Photograph(width, height, x, y, z, texturePath);
     }
     
-    public void Draw(float[] rotationAngles, float[] centerCoordinates, Transform parent){
+    public void Draw(float[] rotationAngles, float[] centerCoordinates, Transform parent, Wall wall){
         // ToDo: Apply photograph texture to the rectangle
         var photo = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        photo.transform.localScale = new Vector3(0.1f, 0.1f, 1f);
+        photo.transform.localScale = new Vector3(this.width/wall.width, this.height/wall.height, 1f);
         //photo.transform.Rotate(rotationAngles[0], rotationAngles[1], rotationAngles[2]);
         photo.transform.parent = parent;
-        photo.transform.position += new Vector3(x/20, y/20, -1f);
+        photo.transform.position += new Vector3(x/wall.width, y/wall.height, 1f);
+        Debug.Log("x is :"  + parent.localScale.x);
 
-        byte[] bytes = File.ReadAllBytes("Assets/Images/test.jpeg");
+        Mesh mesh = photo.GetComponent<MeshFilter>().mesh;
+        Vector2[] uvs = new Vector2[mesh.vertices.Length];
+
+        uvs[0] = new Vector2(0, 0);
+        uvs[1] = new Vector2(1, 0);
+        uvs[2] = new Vector2(0, 1);
+        uvs[3] = new Vector2(1, 1);
+        mesh.uv = uvs;
+
+
+        byte[] bytes = File.ReadAllBytes(this.texturePath);
         Texture2D texture = new Texture2D(2, 2);
         texture.LoadImage(bytes);
 
@@ -67,7 +84,7 @@ public class Photograph
 public class Wall
 {
     public float[] centerCoordinates, rotationAngles;
-    float width, height;
+    public float width, height;
     public Transform transform ;
     public Wall(float[] centerCoordinates, float[] rotationAngles, float width, float height )
     {
