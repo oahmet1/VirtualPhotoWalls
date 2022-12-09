@@ -3,7 +3,7 @@ using System.IO;
 
 public class Photograph
 {
-    float x, y, z, width, height, aspectRatio;
+    public float x, y, z, width, height, aspectRatio;
     string texturePath;
     Wall wall;
 
@@ -12,10 +12,11 @@ public class Photograph
     public Photograph(float width, float height, string texturePath)
     {
         this.aspectRatio = width / height;
-        this.height = 0.1f;
+        this.height = 0.25f;
         this.width = this.aspectRatio * this.height;
         this.texturePath = texturePath;
     }
+
 
     public Photograph(float width, float height, float x, float y, float z, string texturePath)
     {
@@ -36,7 +37,7 @@ public class Photograph
     public void Draw(float[] rotationAngles, float[] centerCoordinates, Transform parent, Wall wall){
         // ToDo: Apply photograph texture to the rectangle
         var photo = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        photo.transform.localScale = new Vector3(this.width/wall.width, this.height/wall.height, 0.1f);
+        photo.transform.localScale = new Vector3(this.width/wall.width, this.height/wall.height, 0.05f);
         //photo.transform.Rotate(rotationAngles[0], rotationAngles[1], rotationAngles[2]);
         photo.transform.parent = parent;
         photo.transform.position += new Vector3(x/wall.width, y/wall.height, 1f);
@@ -86,16 +87,19 @@ public class Wall
     public float[] centerCoordinates, rotationAngles;
     public float width, height;
     public Transform transform ;
+    public GameObject wall;
     public Wall(float[] centerCoordinates, float[] rotationAngles, float width, float height )
     {
         this.centerCoordinates = centerCoordinates;
         this.rotationAngles = rotationAngles;
         this.width = width;
-        this.height = height;
+        this.height = height; 
 
         var wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
-
+        this.wall = wall;
         this.transform = wall.transform;
+
+
     }
     
     public void Draw(){
@@ -103,6 +107,13 @@ public class Wall
         this.transform.position = new Vector3(this.centerCoordinates[0], this.centerCoordinates[1], this.centerCoordinates[2]);
         //photo.transform.rotation = new Vector3((float)0, (float)1, (float)0);
         this.transform.Rotate(this.rotationAngles[0], this.rotationAngles[1], this.rotationAngles[2]);
+
+        Vector3 mainCameraPos = GameObject.Find("Main Camera").GetComponent<Camera>().transform.position;
+        
+        float res = Vector3.Dot(wall.transform.position -mainCameraPos, wall.transform.forward);
+        if(res > 0){
+            wall.transform.Rotate(0, 180, 0);
+        }
     }
 
     public float[] GetBoundsX(){
