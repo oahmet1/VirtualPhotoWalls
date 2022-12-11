@@ -1,8 +1,8 @@
 using UnityEngine;
 using Microsoft.MixedReality.Toolkit;
 using Microsoft.MixedReality.Toolkit.SpatialAwareness;
-
-
+using Unity.XR.CoreUtils;
+using TMPro;
 public class butt : MonoBehaviour
 {
     bool is_working = false;
@@ -42,34 +42,40 @@ public class butt : MonoBehaviour
             Debug.Log("Windows Mesh Observer Suspend is correctly called!");
             //spatialObjectMeshObserver = windowsMeshObserver;
         }
-        //CoreServices.SpatialAwarenessSystem.ResumeObservers();
+        CoreServices.SpatialAwarenessSystem.ResumeObservers();
         //var meshObserver = dataProviderAccess.GetDataProvider<IMixedRealitySpatialAwarenessMeshObserver>();
         //Debug.Log("HIIIIIII");
         //Debug.Log(spatialObjectMeshObserver.Name);
 
-        // CoreServices.SpatialAwarenessSystem.SuspendObservers();
+        CoreServices.SpatialAwarenessSystem.SuspendObservers();
     }
     protected void StartScan() {
         // Debug.Log(spatialObjectMeshObserver.Name + "Resumed\n");
-        //CoreServices.SpatialAwarenessSystem.ResumeObservers();
-        spatialObjectMeshObserver.Resume();
+        CoreServices.SpatialAwarenessSystem.ResumeObservers();
+        //spatialObjectMeshObserver.Resume();
+        windowsMeshObserver.Resume();
         Debug.Log(spatialObjectMeshObserver.Name + "Resumed\n");
-        spatialObjectMeshObserver.DisplayOption = SpatialAwarenessMeshDisplayOptions.Visible;
+        windowsMeshObserver.DisplayOption = SpatialAwarenessMeshDisplayOptions.Visible;
+        var debugTextMesh = gameObject.GetNamedChild("DebugTextMesh");
+        debugTextMesh.GetComponent<TextMeshPro>().text = $"Not working";
     }
 
     protected void StopScan() {
-        //CoreServices.SpatialAwarenessSystem.SuspendObservers();
-        spatialObjectMeshObserver.Suspend();
+        CoreServices.SpatialAwarenessSystem.SuspendObservers();
+        //spatialObjectMeshObserver.Suspend();
+        windowsMeshObserver.Suspend();
         //spatialObjectMeshObserver.
         Debug.Log(spatialObjectMeshObserver.Name + "Suspended\n");
-        spatialObjectMeshObserver.DisplayOption = SpatialAwarenessMeshDisplayOptions.None;
+        windowsMeshObserver.DisplayOption = SpatialAwarenessMeshDisplayOptions.None;
+        var debugTextMesh = gameObject.GetNamedChild("DebugTextMesh");
+        debugTextMesh.GetComponent<TextMeshPro>().text = $"Working";
     }
 
     public void ToogleScan()
     {
-        if (is_working) { StopScan(); is_working = false;}
-        else { StartScan(); is_working = true; }   
-        return;
+        
+        if (is_working) { StopScan(); is_working = false;  }
+        else { StartScan(); is_working = true;  }   
 
     }
 

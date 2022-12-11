@@ -16,8 +16,10 @@ public class SceneUnderStandingBackend : MonoBehaviour
     string meshObserverNameWind = "Windows Scene Understanding Observer";
     //WindowsSceneUnderstandingObserver coolObserver;
     private WindowsSceneUnderstandingObserver observer;
-    string displayObserverName = "XR SDK Windows Mixed Reality Spatial Mesh Observer";
-    IMixedRealitySpatialAwarenessMeshObserver displayObserver;
+
+    
+    //string displayObserverName = "OpenXR Spatial Mesh Observer";
+    //IMixedRealitySpatialAwarenessMeshObserver displayObserver;
 
     private List<GameObject> instantiatedPrefabs;
 
@@ -26,6 +28,7 @@ public class SceneUnderStandingBackend : MonoBehaviour
 
     void Start()
     {
+        CoreServices.SpatialAwarenessSystem.ResumeObservers();
         IMixedRealityDataProviderAccess dataProviderAccess = CoreServices.SpatialAwarenessSystem as IMixedRealityDataProviderAccess;
         //CoreServices.SpatialAwarenessSystem.ResumeObservers();
         if (dataProviderAccess == null)
@@ -35,31 +38,38 @@ public class SceneUnderStandingBackend : MonoBehaviour
             // Spatial Mesh Observer Uses the prefab data to display on Unity. I think it won't work on Hololens, I need to check
             observer = dataProviderAccess.GetDataProvider<WindowsSceneUnderstandingObserver>(meshObserverNameWind);
             // Windows Mesh Observer I think is what scans the room in hololens
-            displayObserver = dataProviderAccess.GetDataProvider<IMixedRealitySpatialAwarenessMeshObserver>(displayObserverName);
+            //displayObserver = dataProviderAccess.GetDataProvider<IMixedRealitySpatialAwarenessMeshObserver>(displayObserverName);
 
             if (observer != null)
             {
                 Debug.Log($"SceneUnderstanding observer type {observer.GetType()}\n");
                 Debug.Log(observer.Name + " is the name \n");
+                observer.AutoUpdate = true ;
             }
             else
             {
                 Debug.Log("Windows Scene Understanding Observer" + " is not found by name \n");
             }
-            if (displayObserver != null)
-            {
-                Debug.Log($"DisplayObserver type {displayObserver.GetType()}\n");
-                Debug.Log(displayObserver.Name + " is the name \n");
-            }
-            else
-            {
-                Debug.Log("Display Observer \n");
-            }
+            //if (displayObserver != null)
+            //{
+            //    Debug.Log($"DisplayObserver type {displayObserver.GetType()}\n");
+            //    Debug.Log(displayObserver.Name + " is the name \n");
+            //}
+            //else
+            //{
+            //    Debug.Log("Display Observer \n");
+            //}
         }
         observedWalls = new Dictionary<int, SpatialAwarenessSceneObject>();
-        observer.Disable();
-        displayObserver.DisplayOption = SpatialAwarenessMeshDisplayOptions.None;
-        displayObserver.Suspend();
+        //observer.Disable();
+        //displayObserver.DisplayOption = SpatialAwarenessMeshDisplayOptions.None;
+        //displayObserver.Suspend();
+
+        var debugTextMesh = gameObject.GetNamedChild("DebugTextMesh");
+        if (observer.IsInitialized) debugTextMesh.GetComponent<TextMeshPro>().text = $"Correctly Initialized.";
+        else debugTextMesh.GetComponent<TextMeshPro>().text = $"NOT Correctly Initialized.";
+
+
 
         // var debugTextMesh = gameObject.GetNamedChild ("DebugTextMesh");
         // debugTextMesh.SetActive(false);
@@ -81,8 +91,8 @@ public class SceneUnderStandingBackend : MonoBehaviour
 
         if (!observer.IsEnabled)
         {
-            displayObserver.DisplayOption = SpatialAwarenessMeshDisplayOptions.None;
-            displayObserver.Suspend();
+            //displayObserver.DisplayOption = SpatialAwarenessMeshDisplayOptions.None;
+            //displayObserver.Suspend();
 
             var CurrentObjects = observer.SceneObjects;
             Debug.Log($"Detected Object Count: {CurrentObjects.Count}");
@@ -112,15 +122,22 @@ public class SceneUnderStandingBackend : MonoBehaviour
             }
             Debug.Log($"Detected Wall Count: {observedWalls.Count}");
             var debugTextMesh = gameObject.GetNamedChild("DebugTextMesh");
-            debugTextMesh.GetComponent<TextMeshPro>().text = $"WC: {observedWalls.Count}";
+            debugTextMesh.GetComponent<TextMeshPro>().text = $"Object Count: {CurrentObjects.Count}";
             // debugTextMesh.SetActive(true);
         }
         else 
         {
-            displayObserver.Resume();
-            displayObserver.DisplayOption = SpatialAwarenessMeshDisplayOptions.Visible;
+            observer.UpdateOnDemand();
+            //displayObserver.Resume();
+            //displayObserver.DisplayOption = SpatialAwarenessMeshDisplayOptions.Visible;
             var debugTextMesh = gameObject.GetNamedChild("DebugTextMesh");
-            debugTextMesh.GetComponent<TextMeshPro>().text = $"Scanning";
+
+
+            var CurrentObjects = observer.SceneObjects;
+            Debug.Log($"Detected Object Count: {CurrentObjects.Count}");
+
+            if (observer.IsRunning) debugTextMesh.GetComponent<TextMeshPro>().text = $"Detected Object Count while enabled: {CurrentObjects.Count}";
+            else debugTextMesh.GetComponent<TextMeshPro>().text = $"Scanning but not running";
         }
 
     }
