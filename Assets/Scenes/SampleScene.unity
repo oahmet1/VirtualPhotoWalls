@@ -810,6 +810,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   text: {fileID: 760284902}
+  UseWallMeshes: 0
+  UseWallQuads: 1
   wall_centers: []
   wall_rotations: []
   wall_extents: []

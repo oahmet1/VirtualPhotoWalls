@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Microsoft.MixedReality.Toolkit;
 using Unity.XR.CoreUtils;
 using TMPro;
+using System.Linq;
 
 public class SceneUnderstandingHandler: MonoBehaviour
 {
@@ -14,12 +15,17 @@ public class SceneUnderstandingHandler: MonoBehaviour
     //private List<GameObject> instantiatedPrefabs;
 
     public GameObject text;
-    private int count = 0;
-    private bool is_scanning;
+    public bool UseWallMeshes = true;
+    public bool UseWallQuads  = false;
+
     public List<UnityEngine.Vector3> wall_centers;
     public List<UnityEngine.Quaternion> wall_rotations;
     public List<UnityEngine.Vector3> wall_extents;
 
+
+    private int count = 0;
+    private bool is_scanning;
+  
 
     protected void Start()
     {
@@ -40,9 +46,9 @@ public class SceneUnderstandingHandler: MonoBehaviour
 
 
         //instantiatedPrefabs = new List<GameObject>();
-
+        //if (Application.isEditor) { observer.}
         is_scanning = true;
-        DrawMeshes();
+        DisplayWalls();
         text.GetComponent<TextMeshProUGUI>().text = $"Started Scanning!";
     }
 
@@ -111,39 +117,53 @@ public class SceneUnderstandingHandler: MonoBehaviour
     public void UpdateWallInfo()
     // Updates public variables to be used by the image alignment algorithm
     {
-        int count = 0;
+        wall_centers = new List<Vector3>();
+        wall_rotations = new List<Quaternion>();
+        wall_extents = new List<Vector3>();
         foreach (var wall in observedWalls.Values)
         {
             if (wall == null) continue;
 
-            //Try to get bounds
-            var bounds = new Bounds(Vector3.zero, Vector3.zero);
-            if (wall.Renderer == null)
-            {
-                bounds = getBounds(wall.GameObject);
-            }
-            if (wall.Renderer != null) bounds = wall.Renderer.bounds;
-
             wall_centers.Add(wall.Position);
             wall_rotations.Add(wall.Rotation);
-            wall_extents.Add(bounds.extents);
+
+            if (UseWallMeshes)
+            {
+                //Try to get bounds
+                var bounds = new Bounds(Vector3.zero, Vector3.zero);
+                if (wall.Renderer == null)
+                {
+                    bounds = getBounds(wall.GameObject);
+                }
+                if (wall.Renderer != null) bounds = wall.Renderer.bounds;
+                wall_extents.Add(bounds.extents);
+                // bounds.center could be used instead of wall.Position
+            }
+            else if (UseWallQuads) 
+            {
+                //int quad_count = 0;
+                //foreach (var quad in wall.Quads)
+                //{
+                //    //msg = msg + $"ID: {quad_count} Quad Extent : {quad.Extents}\n";
+                //    quad_count++;
+                //}
+
+                //If we know the orientation we dont have to deal with the game objects
+                //Vector3 extent = new Vector3(wall.Quads[0].Extents.x, wall.Quads[0].Extents.y, 0);
+                var bounds = getBounds(wall.Quads[0].GameObject);
+                foreach (var quad in wall.Quads)
+                {
+                    bounds.Encapsulate(getBounds(quad.GameObject)); 
+                }
+                wall_extents.Add(bounds.extents);
+            }
+            
 
             string msg = "";
-            if (wall.Position != null) msg = msg + $"Position: {wall.Position}\n";
-            if (wall.Rotation != null) msg = msg + $"Rotation: {wall.Rotation}\n";
-            msg = msg + $"Bounds Extent: {bounds.extents}\n";
-            msg = msg + $"Bounds Center: {bounds.center}\n";
-
-            //int quad_count = 0;
-            //foreach (var quad in wall.Quads)
-            //{   
-            //    msg = msg + $"ID: {quad_count} Quad Extent : {quad.Extents}\n";
-            //    quad_count++;
-            //}
-
-            //Debug.Log(msg);
-            //count++;
-            //if (count > 5) break;
+            msg = msg + $"Position: {wall_centers.Last()}\n";
+            msg = msg + $"Rotation: {wall_rotations.Last()}\n";
+            msg = msg + $"Extent  : {wall_extents.Last()}\n";
+            Debug.Log(msg);
         }
     }
 
@@ -157,14 +177,18 @@ public class SceneUnderstandingHandler: MonoBehaviour
     private void ClearMeshes() 
     {
         observer.RequestMeshData = false;
+        observer.RequestPlaneData = false;
+        
         observer.ClearObservations();
         observer.UpdateOnDemand();
     }
 
-    private void DrawMeshes() 
-    {
+    private void DisplayWalls() 
+    {   
+        
         observer.UpdateInterval = 3.0f;
-        observer.RequestMeshData = true;
+        if (UseWallMeshes) { observer.RequestMeshData = true; observer.RequestPlaneData = false; }
+        else if (UseWallQuads) { observer.RequestMeshData = false; observer.RequestPlaneData = true; }
         observer.UpdateOnDemand();
     }
     public void UpdateEnvironment()
@@ -176,7 +200,7 @@ public class SceneUnderstandingHandler: MonoBehaviour
         if (is_scanning)
         {
             //observer.Enable();
-            DrawMeshes();
+            DisplayWalls();
             message_string = "Scanning";
         }
         else 
