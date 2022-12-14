@@ -88,7 +88,7 @@ public class Wall
     public float width, height;
     public Transform transform ;
     public GameObject wall;
-    public Wall(float[] centerCoordinates, float[] rotationAngles, float width, float height )
+    public Wall(float[] centerCoordinates, float[] rotationAngles, float width, float height, GameObject sceneContent)
     {
         this.centerCoordinates = centerCoordinates;
         this.rotationAngles = rotationAngles;
@@ -96,6 +96,7 @@ public class Wall
         this.height = height; 
 
         var wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        wall.transform.parent = sceneContent.transform;
         this.wall = wall;
         this.transform = wall.transform;
 

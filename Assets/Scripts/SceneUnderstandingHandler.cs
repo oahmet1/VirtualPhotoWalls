@@ -7,6 +7,7 @@ using Microsoft.MixedReality.Toolkit;
 using Unity.XR.CoreUtils;
 using TMPro;
 using System.Linq;
+using System.Collections;
 
 public class SceneUnderstandingHandler: MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class SceneUnderstandingHandler: MonoBehaviour
     //private List<GameObject> instantiatedPrefabs;
 
     public GameObject text;
+    public GameObject SceneContent;
     public bool UseWallMeshes = true;
     public bool UseWallQuads  = false;
 
@@ -183,6 +185,34 @@ public class SceneUnderstandingHandler: MonoBehaviour
         observer.UpdateOnDemand();
     }
 
+    public void DisplayImages()
+    {
+        ArrayList walls = new ArrayList();
+        foreach (var wall in observedWalls.Values)
+        {
+            if (wall == null) continue;
+
+            // Debug.Log($"Position {wall.Position}, Rotation {wall.Rotation}");
+
+            float[] position = new float[3];
+            position[0] = wall.Position.x;
+            position[1] = wall.Position.y;
+            position[2] = wall.Position.z;
+            float[] rotation = new float[3];
+            rotation[0] = wall.GameObject.transform.eulerAngles.x;
+            rotation[1] = wall.GameObject.transform.eulerAngles.y;
+            rotation[2] = wall.GameObject.transform.eulerAngles.z;
+
+            float width = wall.Quads[0].GameObject.transform.localScale.x;
+            float height = wall.Quads[0].GameObject.transform.localScale.y;
+
+            walls.Add(new Wall(position, rotation, width, height, SceneContent));
+        }
+      
+        Debug.Log($"Walls: {(walls.ToArray(typeof(Wall)) as Wall[]).Length}");
+        mymain m = new mymain(walls.ToArray(typeof(Wall)) as Wall[]);
+        m.NoStart();
+    }
     private void DisplayWalls() 
     {   
         
@@ -209,6 +239,7 @@ public class SceneUnderstandingHandler: MonoBehaviour
             GetCurrentWalls();
             ClearMeshes();
             UpdateWallInfo();
+            DisplayImages();
             message_string = $"Wall Count {observedWalls.Count}";
         }
 

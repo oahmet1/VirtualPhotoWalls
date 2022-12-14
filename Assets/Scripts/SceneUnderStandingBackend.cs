@@ -130,7 +130,7 @@ public class SceneUnderStandingBackend : MonoBehaviour
                     float width = wall.Quads[0].GameObject.transform.localScale.x;
                     float height = wall.Quads[0].GameObject.transform.localScale.y;
 
-                    walls.Add(new Wall(position, rotation, width, height));
+                   //walls.Add(new Wall(position, rotation, width, height));
                 }
             }
             Debug.Log($"Detected Wall Count: {observedWalls.Count}");
