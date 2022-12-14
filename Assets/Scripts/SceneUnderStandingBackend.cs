@@ -105,7 +105,7 @@ public class SceneUnderStandingBackend : MonoBehaviour
             {
                 observedWalls = new Dictionary<int, SpatialAwarenessSceneObject>();
             }
-
+            ArrayList walls = new ArrayList();
             foreach (var CurrentObject in CurrentObjects)
             {
                 if (CurrentObject.Value.SurfaceType == SpatialAwarenessSurfaceTypes.Wall)
@@ -116,14 +116,30 @@ public class SceneUnderStandingBackend : MonoBehaviour
                     if (wall == null)
                     { Debug.Log($"Our wall {CurrentObject.Key} is null!"); continue; }
                     observedWalls.Add(CurrentObject.Key, wall);
-                    Debug.Log($"Position {wall.Position}, Rotation {wall.Rotation}  ");
+                    Debug.Log($"Position {wall.Position}, Rotation {wall.Rotation}");
 
+                    float[] position = new float[3];
+                    position[0] = wall.Position.x;
+                    position[1] = wall.Position.y;
+                    position[2] = wall.Position.z;
+                    float[] rotation = new float[3];
+                    rotation[0] = wall.GameObject.transform.eulerAngles.x;
+                    rotation[1] = wall.GameObject.transform.eulerAngles.y;
+                    rotation[2] = wall.GameObject.transform.eulerAngles.z;
+
+                    float width = wall.Quads[0].GameObject.transform.localScale.x;
+                    float height = wall.Quads[0].GameObject.transform.localScale.y;
+
+                    walls.Add(new Wall(position, rotation, width, height));
                 }
             }
             Debug.Log($"Detected Wall Count: {observedWalls.Count}");
             var debugTextMesh = gameObject.GetNamedChild("DebugTextMesh");
             debugTextMesh.GetComponent<TextMeshPro>().text = $"Object Count: {CurrentObjects.Count}";
             // debugTextMesh.SetActive(true);
+            Debug.Log($"Walls: {(walls.ToArray(typeof(Wall)) as Wall[]).Length}");
+            mymain m = new mymain(walls.ToArray(typeof(Wall)) as Wall[]);
+            m.NoStart();
         }
         else 
         {
