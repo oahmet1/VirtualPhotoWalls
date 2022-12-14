@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.IO;
-
+using TMPro;
 public class Photograph
 {
     public float x, y, z, width, height, aspectRatio;
@@ -42,7 +42,7 @@ public class Photograph
         photo.transform.parent = parent;
         photo.transform.position += new Vector3(x/wall.width, y/wall.height, 1f);
         Debug.Log("x is :"  + parent.localScale.x);
-
+/*
         Mesh mesh = photo.GetComponent<MeshFilter>().mesh;
         Vector2[] uvs = new Vector2[mesh.vertices.Length];
 
@@ -62,7 +62,7 @@ public class Photograph
         
         Renderer imageRenderer =photo.GetComponent<Renderer>();
         imageRenderer.material = imageMaterial;
-    
+    */
     }
 
     public void SetPosition(float x, float y, float z){
@@ -88,7 +88,8 @@ public class Wall
     public float width, height;
     public Transform transform ;
     public GameObject wall;
-    public Wall(float[] centerCoordinates, float[] rotationAngles, float width, float height, GameObject sceneContent)
+    public GameObject textmesh;
+    public Wall(float[] centerCoordinates, float[] rotationAngles, float width, float height, GameObject sceneContent, GameObject textmesh)
     {
         this.centerCoordinates = centerCoordinates;
         this.rotationAngles = rotationAngles;
@@ -96,14 +97,16 @@ public class Wall
         this.height = height; 
 
         var wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        wall.transform.parent = sceneContent.transform;
+        //wall.transform.parent = sceneContent.transform;
         this.wall = wall;
         this.transform = wall.transform;
-
+        this.textmesh = textmesh;
+        textmesh.GetComponent<TextMeshProUGUI>().text = $"width: {width} \n height: {height} \n centerCoordinates: {centerCoordinates[0]}, {centerCoordinates[1]}, {centerCoordinates[2]} \n rotationAngles: {rotationAngles[0]}, {rotationAngles[1]}, {rotationAngles[2]}";
 
     }
     
     public void Draw(){
+        textmesh.GetComponent<TextMeshProUGUI>().text = $"It is drawing";
         this.transform.localScale = new Vector3(this.width, this.height, 0.1f);
         this.transform.position = new Vector3(this.centerCoordinates[0], this.centerCoordinates[1], this.centerCoordinates[2]);
         //photo.transform.rotation = new Vector3((float)0, (float)1, (float)0);
