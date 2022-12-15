@@ -207,6 +207,10 @@ public class SceneUnderstandingHandler: MonoBehaviour
 
             float width = wall.Quads[0].GameObject.transform.localScale.x;
             float height = wall.Quads[0].GameObject.transform.localScale.y;
+            for (int i = 0; i < 256; i++){
+                Debug.Log($"occlsionMask: {wall.Quads[0].OcclusionMask[i]}");
+            }
+            
 
             walls.Add(new Wall(position, rotation, width, height, SceneContent, text_mesh_walls));
         }

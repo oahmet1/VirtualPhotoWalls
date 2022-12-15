@@ -56,3 +56,11 @@ class NoOverlapRandomLayoutAlgorithm : ILayoutAlgorithm {
     }
     
 }
+
+class LayoutAlgrithm : ILayoutAlgorithm {
+    public Layout GenerateLayout(Photograph[] photos, Wall wall) {
+        System.Random rnd = new System.Random();
+
+    }
+    
+}
