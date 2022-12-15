@@ -15,9 +15,9 @@ public class mymain : MonoBehaviour
     {
 
         // read all phtographs from the folder
-       /* string path = "Assets/Images/";
+        string path = "Assets/Images/";
         string[] files = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".jpg") || s.EndsWith(".png") || s.EndsWith(".jpeg") || s.EndsWith(".bmp") || s.EndsWith(".tiff")).ToArray();
-        string[] files = System.IO.Directory.GetFiles(path, "*.jpeg");
+        //string[] files = System.IO.Directory.GetFiles(path, "*.jpeg");
 
         Photograph[] photos = new Photograph[files.Length];
         for (int i = 0; i < files.Length; i++)
@@ -30,7 +30,7 @@ public class mymain : MonoBehaviour
             float height = img.Height;
             photos[i] = new Photograph(width, height, files[i]);
         }
-*/
+/*
         string[] files = new string[10];
         Photograph[] photos = new Photograph[10];
         for (int i = 0; i < 10; i++)
@@ -39,7 +39,7 @@ public class mymain : MonoBehaviour
             float height = 25;
             photos[i] = new Photograph(width, height, files[i]);
         }
-        
+  */      
         PhotoWallGenerator generator = new PhotoWallGenerator(this.walls, photos, "NoOverlapRandom");
         generator.GenerateLayout();
     }
