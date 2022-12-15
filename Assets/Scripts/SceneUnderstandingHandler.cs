@@ -16,6 +16,7 @@ public class SceneUnderstandingHandler: MonoBehaviour
     //private List<GameObject> instantiatedPrefabs;
 
     public GameObject text;
+    public GameObject text_mesh_walls;
     public GameObject SceneContent;
     public bool UseWallMeshes = true;
     public bool UseWallQuads  = false;
@@ -206,7 +207,7 @@ public class SceneUnderstandingHandler: MonoBehaviour
             float width = wall.Quads[0].GameObject.transform.localScale.x;
             float height = wall.Quads[0].GameObject.transform.localScale.y;
 
-            walls.Add(new Wall(position, rotation, width, height, SceneContent));
+            walls.Add(new Wall(position, rotation, width, height, SceneContent, text_mesh_walls));
         }
       
         Debug.Log($"Walls: {(walls.ToArray(typeof(Wall)) as Wall[]).Length}");
