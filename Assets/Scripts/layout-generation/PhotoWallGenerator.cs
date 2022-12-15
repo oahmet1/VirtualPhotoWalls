@@ -33,7 +33,7 @@ public class PhotoWallGenerator
 
     public void GenerateLayout()
     {
-        NoOverlapRandomLayoutAlgorithm algo = new NoOverlapRandomLayoutAlgorithm();
+        LayoutAlgorithm algo = new LayoutAlgorithm();
         Layout[] layouts = new Layout[walls.Length];
         for (int i = 0; i < walls.Length; i++)
         {
