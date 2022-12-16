@@ -4,6 +4,8 @@ using System.Linq;
 using UnityEngine;
 using TMPro;
 using System;
+using System.Threading.Tasks;
+
 
 
 //Windows.Storage.KnownFolderId.Pict
@@ -16,9 +18,11 @@ public class mymain : MonoBehaviour
         this.walls = walls;
     }
 
+    public GameObject textmesh;
   
-    public async void NoStart(GameObject DebugTextMesh)
+    public async Task NoStart(GameObject DebugTextMesh)
     {
+        this.textmesh = DebugTextMesh;
 
         /*Wall[] detected_walls = new Wall[3]; // ToDo: Get walls from the camera
         detected_walls[0] = new Wall(new float[] {0f,0f,0f}, new float[]{0f,0f,0f}, 10f, 10f);  // ToDo: fill in correct parameters
@@ -28,7 +32,7 @@ public class mymain : MonoBehaviour
 
 #if (ENABLE_WINMD_SUPPORT || UNITY_WINRT || UNITY_WINRT_10_0) && !UNITY_EDITOR
         //Windows.Storage.KnownFolders.PicturesLibrary.CreateFolderQuery()
-        DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"iN IFFF!";
+        //DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"iN IFFF!";
         
         string path;
         try 
@@ -56,32 +60,53 @@ public class mymain : MonoBehaviour
                 //FileInfo file = new FileInfo(files[i].Path);
                 //Debug.Log(files[i]);
                 // var sizeInBytes = file.Length;
+            int line = 0;
             try 
             {   
                 
                 //FileStream stream = new FileStream( files[i].Path.Replace(@"\", @"\\"), FileMode.Open, FileAccess.Read, FileShare.Read,
                 //bufferSize: 4096, useAsync: true);
                 var stream_op = await files[i].OpenReadAsync();
-                var stream =  stream_op.AsStream();
-                
+                line = line+1;
+
+                var reader = new Windows.Storage.Streams.DataReader(stream_op.GetInputStreamAt(0));
+                line = line+1;
+                var bytes = new byte[stream_op.Size];
+                line = line+1;
+                await reader.LoadAsync((uint)stream_op.Size);
+                line = line+1;
+                reader.ReadBytes(bytes);
+                line = line+1;
+                //var stream =  stream_op.AsStream();
+                //line = line+1;
+
                 DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"Opend filestream";
                 // Bitmap img = LoadBitmap(files[i].Path);
 
-                Bitmap img = new Bitmap(stream);
+                //Bitmap img = new Bitmap(stream);
+                line = line+1;
+
+                Windows.Storage.FileProperties.ImageProperties imageProperties = await files[i].Properties.GetImagePropertiesAsync();
+                line = line+1;
+                float width = imageProperties.Width;
+                line = line+1;
+                float height = imageProperties.Height;
+                line = line+1;
                  //BitmapImage img = new BitmapImage();
                  //img.StreamSource = stream;
 
-                float width = img.Width;
-                float height = img.Height;
-                img.Dispose();
+                //float width = img.Width;
+                //float height = img.Height;
+                //img.Dispose();
+                line = line+1;
            
-                photos[i] = new Photograph(width, height, files[i].Path);
+                photos[i] = new Photograph(width, height, files[i].Path, bytes, DebugTextMesh);
 
-            DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"Opened BMAP";
+                DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"Opened BMAP with byte length{bytes.Length}";
             }
             catch (Exception ex)
             {
-                DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"{files[i].Path} CANNOT BE OPENED.\nEX:\n{ex}";
+                DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"I was done with line : {line}, {files[i].Path} CANNOT BE OPENED.\nEX:\n{ex}";
             }
 
              
@@ -99,10 +124,10 @@ public class mymain : MonoBehaviour
             FileInfo file = new FileInfo(files[i]);
             //Debug.Log(files[i]);
             var sizeInBytes = file.Length;
-            Bitmap img = new Bitmap(files[i]);
+            System.Drawing.Bitmap img = new System.Drawing.Bitmap(files[i]);
             float width = img.Width;
             float height = img.Height;
-            photos[i] = new Photograph(width, height, files[i]);
+            //photos[i] = new Photograph(width, height, files[i]); add this back again with the bytes in the constructor
         }
 #endif
         // read all phtographs from the folder
@@ -110,11 +135,25 @@ public class mymain : MonoBehaviour
 
         // read all phtographs from the folder
         //string path = "Assets/Images/";
-
-        PhotoWallGenerator generator = new PhotoWallGenerator(this.walls, photos, "NoOverlapRandom");
+        int line2 = 1 ;
+        try{
+        
+       
+        DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"Outside of the IFELSE";
+        line2 = line2+1;
+        PhotoWallGenerator generator = new PhotoWallGenerator(this.walls, photos, "NoOverlapRandom", DebugTextMesh);
+        this.textmesh.GetComponent<TextMeshProUGUI>().text = $"Created generator";
+        line2 = line2+1;
         generator.GenerateLayout();
+        this.textmesh.GetComponent<TextMeshProUGUI>().text = $"SUCCEEESSSS";
+        line2 = line2+1;
+        }
+        catch(Exception ex)
+        {
+            DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"atline {line2} EXCEPTION: {ex} ";
+        }
     }
-    public static Bitmap LoadBitmap(string path)
+  /*  public static Bitmap LoadBitmap(string path)
     {
         //Open file in read only mode
         using (FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read))
@@ -127,7 +166,7 @@ public class mymain : MonoBehaviour
             return new Bitmap(memoryStream);
         }
     }
-
+*/
     void Update()
     {
         

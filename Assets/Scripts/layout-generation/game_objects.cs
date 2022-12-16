@@ -6,19 +6,24 @@ public class Photograph
     public float x, y, z, width, height, aspectRatio;
     string texturePath;
     Wall wall;
+    byte[] bytes;
+    public GameObject textmesh;
 
      public TextAsset imageAsset;
 
-    public Photograph(float width, float height, string texturePath)
+    public Photograph(float width, float height, string texturePath, byte[] bytes, GameObject textmesh)
     {
         this.aspectRatio = width / height;
         this.height = 0.25f;
         this.width = this.aspectRatio * this.height;
         this.texturePath = texturePath;
+        this.bytes = bytes;
+        this.textmesh = textmesh;
+
     }
 
 
-    public Photograph(float width, float height, float x, float y, float z, string texturePath)
+    public Photograph(float width, float height, float x, float y, float z, string texturePath, GameObject textmesh)
     {
         this.width = width;
         this.height = height;
@@ -26,21 +31,29 @@ public class Photograph
         this.y = y;
         this.z = z;
         this.texturePath = texturePath;
-
+        this.textmesh = textmesh;
     }
 
     public Photograph createCopy()
     {
-        return new Photograph(width, height, x, y, z, texturePath);
+        return new Photograph(width, height, x, y, z, texturePath, textmesh);
     }
     
     public void Draw(float[] rotationAngles, float[] centerCoordinates, Transform parent, Wall wall){
         // ToDo: Apply photograph texture to the rectangle
+        this.textmesh.GetComponent<TextMesh>().text = "Starting to draw photo";
+
         var photo = GameObject.CreatePrimitive(PrimitiveType.Cube);
+
+        this.textmesh.GetComponent<TextMesh>().text = "Created the cube";
+
         photo.transform.localScale = new Vector3(this.width/wall.width, this.height/wall.height, 0.05f);
         //photo.transform.Rotate(rotationAngles[0], rotationAngles[1], rotationAngles[2]);
         photo.transform.parent = parent;
         photo.transform.position += new Vector3(x/wall.width, y/wall.height, 1f);
+
+        this.textmesh.GetComponent<TextMesh>().text = "Scaled the cube";
+
         Debug.Log("x is :"  + parent.localScale.x);
 
         Mesh mesh = photo.GetComponent<MeshFilter>().mesh;
@@ -53,7 +66,7 @@ public class Photograph
         mesh.uv = uvs;
 
 
-        byte[] bytes = File.ReadAllBytes(this.texturePath);
+        byte[] bytes = this.bytes;// File.ReadAllBytes(this.texturePath);
         Texture2D texture = new Texture2D(2, 2);
         texture.LoadImage(bytes);
 
@@ -62,6 +75,8 @@ public class Photograph
         
         Renderer imageRenderer =photo.GetComponent<Renderer>();
         imageRenderer.material = imageMaterial;
+
+        textmesh.GetComponent<TextMesh>().text = "Done Drawing photo, assigned material";
     
     }
 
@@ -106,7 +121,7 @@ public class Wall
     }
     
     public void Draw(){
-        textmesh.GetComponent<TextMeshProUGUI>().text = $"It is drawing";
+        this.textmesh.GetComponent<TextMeshProUGUI>().text = $"It is drawing";
         this.transform.localScale = new Vector3(this.width, this.height, 0.1f);
         this.transform.position = new Vector3(this.centerCoordinates[0], this.centerCoordinates[1], this.centerCoordinates[2]);
         //photo.transform.rotation = new Vector3((float)0, (float)1, (float)0);

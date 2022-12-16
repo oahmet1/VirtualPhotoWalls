@@ -8,6 +8,7 @@ using Unity.XR.CoreUtils;
 using TMPro;
 using System.Linq;
 using System.Collections;
+using System.Threading.Tasks;
 
 public class SceneUnderstandingHandler: MonoBehaviour
 {
@@ -186,7 +187,7 @@ public class SceneUnderstandingHandler: MonoBehaviour
         observer.UpdateOnDemand();
     }
 
-    public void DisplayImages()
+    public async void DisplayImages()
     {
         ArrayList walls = new ArrayList();
         foreach (var wall in observedWalls.Values)
@@ -212,7 +213,7 @@ public class SceneUnderstandingHandler: MonoBehaviour
       
         Debug.Log($"Walls: {(walls.ToArray(typeof(Wall)) as Wall[]).Length}");
         mymain m = new mymain(walls.ToArray(typeof(Wall)) as Wall[]);
-        m.NoStart(text_mesh_walls);
+        await m.NoStart(text_mesh_walls);
     }
     private void DisplayWalls() 
     {   
@@ -241,6 +242,7 @@ public class SceneUnderstandingHandler: MonoBehaviour
             ClearMeshes();
             UpdateWallInfo();
             DisplayImages();
+            text_mesh_walls.GetComponent<TextMeshProUGUI>().text = $"DisplayImagesreturned";
             message_string = $"Wall Count {observedWalls.Count}";
         }
 
