@@ -5,6 +5,7 @@ using UnityEngine;
 using TMPro;
 using System;
 
+
 //Windows.Storage.KnownFolderId.Pict
 //using Win
 public class mymain : MonoBehaviour
@@ -40,7 +41,6 @@ public class mymain : MonoBehaviour
             DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"{ex}";
         }
         
-        
         //DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"asdlksdkfsdjhf";
         var p = await Windows.Storage.KnownFolders.PicturesLibrary.GetFilesAsync();
         DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"{p.Count}";
@@ -61,23 +61,30 @@ public class mymain : MonoBehaviour
                 
                 //FileStream stream = new FileStream( files[i].Path.Replace(@"\", @"\\"), FileMode.Open, FileAccess.Read, FileShare.Read,
                 //bufferSize: 4096, useAsync: true);
-                var stream = files[i].OpenSequentialReadAsync();
+                var stream_op = await files[i].OpenReadAsync();
+                var stream =  stream_op.AsStream();
+                
                 DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"Opend filestream";
                 // Bitmap img = LoadBitmap(files[i].Path);
 
                 Bitmap img = new Bitmap(stream);
+                 //BitmapImage img = new BitmapImage();
+                 //img.StreamSource = stream;
+
                 float width = img.Width;
                 float height = img.Height;
                 img.Dispose();
-            DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"Opened BMAP";
-            break;
            
                 photos[i] = new Photograph(width, height, files[i].Path);
+
+            DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"Opened BMAP";
             }
             catch (Exception ex)
             {
                 DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"{files[i].Path} CANNOT BE OPENED.\nEX:\n{ex}";
             }
+
+             
         }
                
 #else
