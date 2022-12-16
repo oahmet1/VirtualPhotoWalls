@@ -58,17 +58,25 @@ public class mymain : MonoBehaviour
                 // var sizeInBytes = file.Length;
             try 
             {   
-                Bitmap img = LoadBitmap(files[i].Path);
+                
+                //FileStream stream = new FileStream( files[i].Path.Replace(@"\", @"\\"), FileMode.Open, FileAccess.Read, FileShare.Read,
+                //bufferSize: 4096, useAsync: true);
+                var stream = files[i].OpenSequentialReadAsync();
+                DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"Opend filestream";
+                // Bitmap img = LoadBitmap(files[i].Path);
+
+                Bitmap img = new Bitmap(stream);
                 float width = img.Width;
                 float height = img.Height;
-            DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"Bitmap OKUNDU";
+                img.Dispose();
+            DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"Opened BMAP";
             break;
            
                 photos[i] = new Photograph(width, height, files[i].Path);
             }
             catch (Exception ex)
             {
-                DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"{ex}";
+                DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"{files[i].Path} CANNOT BE OPENED.\nEX:\n{ex}";
             }
         }
                
