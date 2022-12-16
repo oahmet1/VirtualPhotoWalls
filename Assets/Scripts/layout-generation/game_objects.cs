@@ -42,7 +42,7 @@ public class Photograph
         photo.transform.parent = parent;
         photo.transform.position += new Vector3(x/wall.width, y/wall.height, 1f);
         Debug.Log("x is :"  + parent.localScale.x);
-/*
+
         Mesh mesh = photo.GetComponent<MeshFilter>().mesh;
         Vector2[] uvs = new Vector2[mesh.vertices.Length];
 
@@ -62,7 +62,7 @@ public class Photograph
         
         Renderer imageRenderer =photo.GetComponent<Renderer>();
         imageRenderer.material = imageMaterial;
-    */
+    
     }
 
     public void SetPosition(float x, float y, float z){

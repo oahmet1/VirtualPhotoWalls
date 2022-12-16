@@ -212,7 +212,7 @@ public class SceneUnderstandingHandler: MonoBehaviour
       
         Debug.Log($"Walls: {(walls.ToArray(typeof(Wall)) as Wall[]).Length}");
         mymain m = new mymain(walls.ToArray(typeof(Wall)) as Wall[]);
-        m.NoStart();
+        m.NoStart(text_mesh_walls);
     }
     private void DisplayWalls() 
     {   

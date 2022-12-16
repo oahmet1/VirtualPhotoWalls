@@ -139,7 +139,7 @@ public class SceneUnderStandingBackend : MonoBehaviour
             // debugTextMesh.SetActive(true);
             Debug.Log($"Walls: {(walls.ToArray(typeof(Wall)) as Wall[]).Length}");
             mymain m = new mymain(walls.ToArray(typeof(Wall)) as Wall[]);
-            m.NoStart();
+            //m.NoStart();
         }
         else 
         {
