@@ -83,7 +83,8 @@ public class Photograph
         texture.LoadImage(bytes);
         line = line + 1; // 11
 
-        Material imageMaterial =new Material(Shader.Find("Unlit/Texture"));
+        
+        Material imageMaterial =new Material(Shader.Find("Standard"));
         line = line + 1; // 12
         imageMaterial.SetTexture("_MainTex", texture);
         line = line + 1; // 13
@@ -146,6 +147,10 @@ public class Wall
         this.transform = wall.transform;
         //DebugTextMesh.GetComponent<TextMeshPro>().text = $"width: {width} \n height: {height} \n centerCoordinates: {centerCoordinates[0]}, {centerCoordinates[1]}, {centerCoordinates[2]} \n rotationAngles: {rotationAngles[0]}, {rotationAngles[1]}, {rotationAngles[2]}";
 
+        Material imageMaterial = new Material(Shader.Find("Standard"));
+        Renderer imageRenderer = wall.GetComponent<Renderer>();
+        imageRenderer.material = imageMaterial;
+
     }
 
     public void Draw(){
@@ -161,6 +166,8 @@ public class Wall
         if(res > 0){
             wall.transform.Rotate(0, 180, 0);
         }
+
+
     }
 
     public float[] GetBoundsX(){

@@ -20,7 +20,7 @@ public class mymain : MonoBehaviour
 
     public GameObject textmesh;
   
-    public void NoStart(GameObject DebugTextMesh)
+    public async void NoStart(GameObject DebugTextMesh)
     {
         //this.textmesh = DebugTextMesh;
 
