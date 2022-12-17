@@ -242,7 +242,7 @@ public class SceneUnderstandingHandler: MonoBehaviour
             ClearMeshes();
             UpdateWallInfo();
             DisplayImages();
-            text_mesh_walls.GetComponent<TextMeshProUGUI>().text = $"DisplayImagesreturned";
+            //text_mesh_walls.GetComponent<TextMeshProUGUI>().text = $"DisplayImagesreturned";
             message_string = $"Wall Count {observedWalls.Count}";
         }
 

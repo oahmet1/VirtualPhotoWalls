@@ -100,13 +100,31 @@ public class mymain : MonoBehaviour
                 //img.Dispose();
                 line = line+1;
            
-                photos[i] = new Photograph(width, height, files[i].Path, bytes, DebugTextMesh);
+                photos[i] = new Photograph(width, height, files[i].Path, bytes);
 
                 DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"Opened BMAP with byte length{bytes.Length}";
             }
             catch (Exception ex)
             {
                 DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"I was done with line : {line}, {files[i].Path} CANNOT BE OPENED.\nEX:\n{ex}";
+            }
+
+            int line2 = 1 ;
+            try{
+            
+        
+            DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"Outside of the IFELSE";
+            line2 = line2+1;
+            PhotoWallGenerator generator = new PhotoWallGenerator(this.walls, photos, "NoOverlapRandom", DebugTextMesh);
+            DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"Created generator";
+            line2 = line2+1;
+            generator.GenerateLayout(DebugTextMesh);
+            DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"SUCCEEESSSS";
+            line2 = line2+1;
+            }
+            catch(Exception ex)
+            {
+                DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"atline {line2} EXCEPTION: {ex} ";
             }
 
              
@@ -135,23 +153,7 @@ public class mymain : MonoBehaviour
 
         // read all phtographs from the folder
         //string path = "Assets/Images/";
-        int line2 = 1 ;
-        try{
         
-       
-        DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"Outside of the IFELSE";
-        line2 = line2+1;
-        PhotoWallGenerator generator = new PhotoWallGenerator(this.walls, photos, "NoOverlapRandom", DebugTextMesh);
-        this.textmesh.GetComponent<TextMeshProUGUI>().text = $"Created generator";
-        line2 = line2+1;
-        generator.GenerateLayout();
-        this.textmesh.GetComponent<TextMeshProUGUI>().text = $"SUCCEEESSSS";
-        line2 = line2+1;
-        }
-        catch(Exception ex)
-        {
-            DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"atline {line2} EXCEPTION: {ex} ";
-        }
     }
   /*  public static Bitmap LoadBitmap(string path)
     {
