@@ -16,6 +16,7 @@ public class SceneUnderstandingHandler: MonoBehaviour
     private Dictionary<int, SpatialAwarenessSceneObject> observedWalls;
     //private List<GameObject> instantiatedPrefabs;
 
+    private string WallObserverName = "Windows Scene Understanding Observer";
     public GameObject text;
     public GameObject text_mesh_walls;
     public GameObject SceneContent;
@@ -34,9 +35,15 @@ public class SceneUnderstandingHandler: MonoBehaviour
 
     protected void Start()
     {
+        // Use CoreServices to quickly get access to the IMixedRealitySpatialAwarenessSystem
+        var spatialAwarenessService = CoreServices.SpatialAwarenessSystem;
 
-        observer = CoreServices.GetSpatialAwarenessSystemDataProvider<IMixedRealitySceneUnderstandingObserver>();
-       
+        // Cast to the IMixedRealityDataProviderAccess to get access to the data providers
+        var dataProviderAccess = spatialAwarenessService as IMixedRealityDataProviderAccess;
+
+        //observer = CoreServices.GetSpatialAwarenessSystemDataProvider<IMixedRealitySceneUnderstandingObserver>();
+        observer = dataProviderAccess.GetDataProvider<IMixedRealitySceneUnderstandingObserver>(WallObserverName);
+
         if (observer == null)
         {
             Debug.LogError("Couldn't access Scene Understanding Observer! Please make sure the current build target is set to Universal Windows Platform. "
@@ -227,7 +234,7 @@ public class SceneUnderstandingHandler: MonoBehaviour
         
         observer.UpdateInterval = 3.0f;
         if (UseWallMeshes) { observer.RequestMeshData = true; observer.RequestPlaneData = false; }
-        else if (UseWallQuads) { observer.RequestMeshData = false; observer.RequestPlaneData = true; }
+        else if (UseWallQuads) { observer.RequestMeshData = false; observer.RequestPlaneData = true; observer.RequestOcclusionMask = true; }
         observer.UpdateOnDemand();
     }
 
