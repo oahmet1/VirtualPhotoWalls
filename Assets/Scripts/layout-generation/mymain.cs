@@ -118,8 +118,8 @@ public class mymain : MonoBehaviour
             PhotoWallGenerator generator = new PhotoWallGenerator(this.walls, photos, "NoOverlapRandom", DebugTextMesh);
             DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"Created generator";
             line2 = line2+1;
-            generator.GenerateLayout(DebugTextMesh);
-            DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"SUCCEEESSSS";
+            generator.GenerateLayout();
+            //DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"SUCCEEESSSS";
             line2 = line2+1;
             }
             catch(Exception ex)

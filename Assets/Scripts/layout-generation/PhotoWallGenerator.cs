@@ -1,5 +1,8 @@
 using UnityEngine;
 using System.Collections;
+using TMPro;
+using System;
+
 
 public class Layout
 {
@@ -33,32 +36,52 @@ public class PhotoWallGenerator : MonoBehaviour
 
     }
 
-    public void GenerateLayout(GameObject text_mesh)
+    public void GenerateLayout()
     {
-        text_mesh.GetComponent<TextMesh>().text = "Just Generating Layout";
+        var debug = GameObject.Find("TextBox").GetComponent<TextMeshProUGUI>();
+        int line = 1;
+        try{
+       
+        debug.text = "Just Generating Layout";
+
         NoOverlapRandomLayoutAlgorithm algo = new NoOverlapRandomLayoutAlgorithm();
-        text_mesh.GetComponent<TextMesh>().text = "Generating Layout";
+        line = line + 1;
+        debug.text = "Generating Layout";
+
         Layout[] layouts = new Layout[walls.Length];
+        line = line + 1;
         for (int i = 0; i < walls.Length; i++)
         {
-            text_mesh.GetComponent<TextMesh>().text = "Wall " + i + " of " + walls.Length;
+            debug.text = "Wall " + i + " of " + walls.Length;
             layouts[i] = algo.GenerateLayout(photos ,walls[i] );
-            text_mesh.GetComponent<TextMesh>().text = "Wall " + i + " of " + walls.Length + " done";
+            debug.text = "Wall " + i + " of " + walls.Length + " done";
         }
-
+        line = line + 1;
         for (int i = 0; i < walls.Length; i++)
         {
-            text_mesh.GetComponent<TextMesh>().text = "Wall " + i + " of " + walls.Length + "drawing";
-            layouts[i].Draw(walls[i].rotationAngles, walls[i].centerCoordinates, walls[i].transform, walls[i]);
+            debug.text = "Wall " + i + " of " + walls.Length + "drawing";
+            if (layouts[i] != null){
+                layouts[i].Draw(walls[i].rotationAngles, walls[i].centerCoordinates, walls[i].transform, walls[i]);
+            } else {
+                line = -1000000000;
+            }
             Debug.Log("Layout " + i + " has angles" + walls[i].rotationAngles);
-            text_mesh.GetComponent<TextMesh>().text = "Wall " + i + " of " + walls.Length + "done drawing";
+            debug.text = "Wall " + i + " of " + walls.Length + "done drawing";
         }	
-
+        line = line + 1;
         for (int i = 0; i < walls.Length; i++)
         {
             walls[i].Draw();
         }
+        }
+        catch(Exception ex){
+            //throw divide by zero exception
+            debug.text = "Generate Layout : Error on line " + line + " " + ex;
+        }
+        
 
+
+       
         
     }
 
