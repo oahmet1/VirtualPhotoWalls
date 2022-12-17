@@ -151,15 +151,44 @@ class LayoutAlgorithm : ILayoutAlgorithm {
     }
 
     public float GetRadius(ArrayList displayedPhotos, Wall wall){
-        Debug.Log("displayedPhotos.Count: " + displayedPhotos.Count);
-        Photograph p = displayedPhotos[0] as Photograph;
-        Debug.Log("p" + p);
-        return(Mathf.Max(p.width/2, p.height/2));
-        /*
-        for(int i=0; i<displayedPhotos.Count; i++){
-            Photograph p = displayedPhotos[i] as Photograph;
+        if(displayedPhotos.Count == 0){
+            return 0;
         }
-        */
-    
+        Photograph centerPhoto = displayedPhotos[0] as Photograph;
+        if(displayedPhotos.Count == 1){
+            
+            return(Mathf.Max(centerPhoto.width/2, centerPhoto.height/2));
+        }
+        
+        float maxDist = 0;
+        
+        for(int i=1; i<displayedPhotos.Count; i++){
+            Photograph p = displayedPhotos[i] as Photograph;
+            float xDelta = centerPhoto.x - p.x;
+            float yDelta = centerPhoto.y - p.y;
+            
+            float cornerX = 0;
+            float cornerY = 0;
+
+            if(xDelta >= 0 && yDelta >= 0){
+                cornerX = p.x - p.width/2;
+                cornerY = p.y - p.height/2;
+            }else if(xDelta >= 0 && yDelta < 0){
+                cornerX = p.x - p.width/2;
+                cornerY = p.y + p.height/2;
+            }else if(xDelta < 0 && yDelta >= 0){
+                cornerX = p.x + p.width/2;
+                cornerY = p.y - p.height/2;
+            }else if(xDelta < 0 && yDelta < 0){
+                cornerX = p.x + p.width/2;
+                cornerY = p.y + p.height/2;
+            }
+            float distance = Mathf.Pow(centerPhoto.x - cornerX, 2) + Mathf.Pow(centerPhoto.y - cornerY, 2);
+            maxDist = Mathf.Max(maxDist, distance);
+        }
+        return Mathf.Sqrt(maxDist);
+
     }
+        
+    
 }
