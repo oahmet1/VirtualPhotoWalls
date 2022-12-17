@@ -117,13 +117,15 @@ public class Photograph
     }
 
     public bool IsOverlapping(Photograph photo){
-        if (this.x + this.width < photo.x || photo.x + photo.width < this.x){
-            return false;
-        } else if (this.y + this.height < photo.y || photo.y + photo.height < this.y){
-            return false;
-        } else {
+        return this.IsOverlappingWithMargin(photo, 0);
+    }
+    public bool IsOverlappingWithMargin(Photograph photo, float margin){
+        float distanceInXDirection = Math.Abs(this.x - photo.x);
+        float distanceInYDirection = Math.Abs(this.y - photo.y);
+        if (distanceInXDirection < (this.width + photo.width)/2 + margin && distanceInYDirection < (this.height + photo.height)/2 + margin){
             return true;
         }
+        return false;
     }
 }
 

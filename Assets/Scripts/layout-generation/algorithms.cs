@@ -62,8 +62,8 @@ class LayoutAlgorithm : ILayoutAlgorithm {
     private void placePhotosOnCircle(Photograph[] photos, ArrayList prevPhotos, float radius, float centerX, float centerY){
         float margin = 0.05f;
         float angle = 0;
-        float angleStep = 360 / 10; // ToDo: figure out good heuristic for the angle step with increasing circle diameter
         float numSteps  = 10;
+        float angleStep = 2 * Mathf.PI / numSteps; // ToDo: figure out good heuristic for the angle step with increasing circle diameter
         int numPhotos = photos.Length;
         for (int i=0; i<numSteps; i++){
             float x = centerX + radius * Mathf.Cos(angle);
@@ -76,42 +76,48 @@ class LayoutAlgorithm : ILayoutAlgorithm {
             bool validPlacementFound = true;
             for (int j=0; j<prevPhotos.Count; j++){
                 Photograph prevPhoto = prevPhotos[j] as Photograph;
-                if (prevPhoto.IsOverlapping(nextPhoto)){
+                if (prevPhoto.IsOverlappingWithMargin(nextPhoto, margin)){
                     float[] prevPos = prevPhoto.GetPosition();
                     float prevWidth = prevPhoto.width;
                     float prevHeight = prevPhoto.height;
                     float nextWidth = nextPhoto.width;
                     float nextHeight = nextPhoto.height;
-                    if (Mathf.Abs(prevPos[0] - x) < Mathf.Abs(prevPos[1] - y)){
-                        float newMoveX = 0;
-                        if (prevPos[0] > x){
-                            newMoveX = prevPos[0] - x - prevWidth/2 - nextWidth/2 - margin;
-                        } else {
-                            newMoveX = prevPos[0] - x + prevWidth/2 + nextWidth/2 + margin;
-                        }
-                        if (moveX * newMoveX < 0){
-                            validPlacementFound = false;
-                            break;
-                        }
-                        else if (Mathf.Abs(newMoveX) > Mathf.Abs(moveX)){
-                            moveX = newMoveX;
-                        }
+
+                    // calculate how much we need to move the next photo to avoid overlap
+                    float newMoveX = 0;
+                    float newMoveY = 0;
+                    float spaceNeededX = prevWidth/2 + nextWidth/2 + margin - Mathf.Abs(x - prevPos[0]);
+                    float spaceNeededY = prevHeight/2 + nextHeight/2 + margin - Mathf.Abs(y - prevPos[1]);
+                    if (x < prevPos[0]){
+                        newMoveX = spaceNeededX;
+                    } else if (x > prevPos[0]){
+                        newMoveX = -spaceNeededX;
+                    }
+                    if (y < prevPos[1]){
+                        newMoveY = spaceNeededY;
+                    } else if (y > prevPos[1]){
+                        newMoveY = -spaceNeededY;
+                    }
+
+                    // choose the best direction to move the photo
+                    if (moveX * newMoveX >= 0 && moveY * newMoveY >= 0 || abs(moveX) > abs(newMoveX) && abs(moveY) > abs(newMoveY)){
+                        // nothing to do
+                        continue;
+                    } else if (abs(newMoveX) < abs(newMoveY) && moveX * newMoveX >= 0){
+                        // prefer move in x direction and it is possible
+                        moveX = newMoveX;
+                    } else if (moveY * newMoveY >= 0){
+                        // prefer move in y direction and it is possible
+                        moveY = newMoveY;
                     } else {
-                        float newMoveY = 0;
-                        if (prevPos[1] > y){
-                            newMoveY = prevPos[1] - y - prevHeight/2 - nextWidth/2 - margin;
-                        } else {
-                            newMoveY = prevPos[1] - y + prevHeight/2 + nextWidth/2 + margin;
-                        }
-                        if (moveY * newMoveY < 0){
-                            validPlacementFound = false;
-                            break;
-                        }
-                        else if (Mathf.Abs(newMoveY) > Mathf.Abs(moveY)){
-                            moveY = newMoveY;
-                        }
+                        // move is not possible in either direction
+                        validPlacementFound = false;
+                        break;
                     }
                 }
+            }
+            if (!validPlacementFound){
+                continue;
             }
             nextPhoto.SetPosition(x + moveX, y + moveY, 0.1f);
             prevPhotos.Add(nextPhoto);
