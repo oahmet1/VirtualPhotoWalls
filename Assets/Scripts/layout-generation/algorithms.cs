@@ -61,15 +61,16 @@ class NoOverlapRandomLayoutAlgorithm : ILayoutAlgorithm {
 class LayoutAlgorithm : ILayoutAlgorithm {
     private void placePhotosOnCircle(Photograph[] photos, ArrayList prevPhotos, float radius, float centerX, float centerY){
         float margin = 0.05f;
-        float angle = 0;
-        float numSteps  = 10;
+        float angle = Random.Range(0, 2 * Mathf.PI);
+        float numSteps  =  Mathf.CeilToInt(2*radius / photos[0].width + 2*radius / photos[0].height);
         float angleStep = 2 * Mathf.PI / numSteps; // ToDo: figure out good heuristic for the angle step with increasing circle diameter
         int numPhotos = photos.Length;
         for (int i=0; i<numSteps; i++){
             float x = centerX + radius * Mathf.Cos(angle);
             float y = centerY + radius * Mathf.Sin(angle);
             // ToDo: some positions on the circle might need to be skipped
-            Photograph nextPhoto = photos[i % numPhotos].createCopy();
+            int randomPhotoIndex = Random.Range(0, numPhotos);
+            Photograph nextPhoto = photos[randomPhotoIndex % numPhotos].createCopy();
             nextPhoto.SetPosition(x, y, 0.1f);
             float moveX = 0;
             float moveY = 0;
@@ -89,26 +90,28 @@ class LayoutAlgorithm : ILayoutAlgorithm {
                     float spaceNeededX = prevWidth/2 + nextWidth/2 + margin - Mathf.Abs(x - prevPos[0]);
                     float spaceNeededY = prevHeight/2 + nextHeight/2 + margin - Mathf.Abs(y - prevPos[1]);
                     if (x < prevPos[0]){
-                        newMoveX = spaceNeededX;
-                    } else if (x > prevPos[0]){
                         newMoveX = -spaceNeededX;
+                    } else {
+                        newMoveX = spaceNeededX;
                     }
                     if (y < prevPos[1]){
-                        newMoveY = spaceNeededY;
-                    } else if (y > prevPos[1]){
                         newMoveY = -spaceNeededY;
+                    } else {
+                        newMoveY = spaceNeededY;
                     }
 
                     // choose the best direction to move the photo
-                    if (moveX * newMoveX >= 0 && moveY * newMoveY >= 0 || abs(moveX) > abs(newMoveX) && abs(moveY) > abs(newMoveY)){
+                    if ((moveX * newMoveX >= 0 && Mathf.Abs(moveX) > Mathf.Abs(newMoveX)) || (moveY * newMoveY >= 0 && Mathf.Abs(moveY) > Mathf.Abs(newMoveY))){
                         // nothing to do
                         continue;
-                    } else if (abs(newMoveX) < abs(newMoveY) && moveX * newMoveX >= 0){
+                    } else if (Mathf.Abs(newMoveX) < Mathf.Abs(newMoveY) && moveX * newMoveX >= 0){
                         // prefer move in x direction and it is possible
                         moveX = newMoveX;
                     } else if (moveY * newMoveY >= 0){
                         // prefer move in y direction and it is possible
                         moveY = newMoveY;
+                    } else if (moveX * newMoveX >= 0) {
+                        moveX = newMoveX;
                     } else {
                         // move is not possible in either direction
                         validPlacementFound = false;
@@ -122,6 +125,7 @@ class LayoutAlgorithm : ILayoutAlgorithm {
             nextPhoto.SetPosition(x + moveX, y + moveY, 0.1f);
             prevPhotos.Add(nextPhoto);
             angle += angleStep;
+            angle %= 2 * Mathf.PI;
         }
     }
     public Layout GenerateLayout(Photograph[] photos, Wall wall) {
@@ -139,7 +143,10 @@ class LayoutAlgorithm : ILayoutAlgorithm {
         DisplayAPhoto(displayedPhotos, notDisplayedPhotos, photos[firstPhotoInd], 0, 0);
         
         float r = GetRadius(displayedPhotos, wall);
-        placePhotosOnCircle(photos, displayedPhotos, r, 0, 0);
+        while (r <  Mathf.Min(wall.height/2, wall.width/2)){
+            placePhotosOnCircle(photos, displayedPhotos, r, 0, 0);
+            r = GetRadius(displayedPhotos, wall);
+        }
         
         return new Layout(displayedPhotos.ToArray(typeof(Photograph)) as Photograph[]);
     }

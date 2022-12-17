@@ -123,8 +123,10 @@ public class Photograph
         float distanceInXDirection = Math.Abs(this.x - photo.x);
         float distanceInYDirection = Math.Abs(this.y - photo.y);
         if (distanceInXDirection < (this.width + photo.width)/2 + margin && distanceInYDirection < (this.height + photo.height)/2 + margin){
+            Debug.Log($"Photos IS overlapping: TX {this.x} TY {this.y} W {this.width} H {this.height} PX {photo.x} PY {photo.y} PW {photo.width} PH {photo.height}");
             return true;
         }
+        Debug.Log($"Photos IS NOT overlapping: TX {this.x} TY {this.y} W {this.width} H {this.height} PX {photo.x} PY {photo.y} PW {photo.width} PH {photo.height}");
         return false;
     }
 }
