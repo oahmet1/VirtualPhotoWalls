@@ -38,7 +38,7 @@ public class Photograph
     public void Draw(float[] rotationAngles, float[] centerCoordinates, Transform parent, Wall wall){
         
         
-        var debug = GameObject.Find("DebugBox").GetComponent<TextMeshProUGUI>();
+        var debug = GameObject.Find("DebugBox").GetComponent<TextMeshPro>();
         debug.text = "Drawing photo";
         int line = 1;
 
@@ -144,12 +144,12 @@ public class Wall
         //wall.transform.parent = sceneContent.transform;
         this.wall = wall;
         this.transform = wall.transform;
-        //DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"width: {width} \n height: {height} \n centerCoordinates: {centerCoordinates[0]}, {centerCoordinates[1]}, {centerCoordinates[2]} \n rotationAngles: {rotationAngles[0]}, {rotationAngles[1]}, {rotationAngles[2]}";
+        //DebugTextMesh.GetComponent<TextMeshPro>().text = $"width: {width} \n height: {height} \n centerCoordinates: {centerCoordinates[0]}, {centerCoordinates[1]}, {centerCoordinates[2]} \n rotationAngles: {rotationAngles[0]}, {rotationAngles[1]}, {rotationAngles[2]}";
 
     }
-    
+
     public void Draw(){
-        //this.textmesh.GetComponent<TextMeshProUGUI>().text = $"It is drawing";
+        //this.textmesh.GetComponent<TextMeshPro>().text = $"It is drawing";
         this.transform.localScale = new Vector3(this.width, this.height, 0.1f);
         this.transform.position = new Vector3(this.centerCoordinates[0], this.centerCoordinates[1], this.centerCoordinates[2]);
         //photo.transform.rotation = new Vector3((float)0, (float)1, (float)0);

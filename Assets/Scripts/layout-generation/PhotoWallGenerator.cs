@@ -36,7 +36,7 @@ public class PhotoWallGenerator : MonoBehaviour
 
     public void GenerateLayout()
     {
-        var debug = GameObject.Find("TextBox").GetComponent<TextMeshProUGUI>();
+        var debug = GameObject.Find("DebugBox2").GetComponent<TextMeshPro>();
         int line = 1;
         try{
        

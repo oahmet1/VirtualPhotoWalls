@@ -61,7 +61,7 @@ public class SceneUnderstandingHandler: MonoBehaviour
         //if (Application.isEditor) { observer.}
         is_scanning = true;
         DisplayWalls();
-        text.GetComponent<TextMeshProUGUI>().text = $"Started Scanning!";
+        text.GetComponent<TextMeshPro>().text = $"Started Scanning!";
     }
 
     protected void Update()
@@ -183,7 +183,7 @@ public class SceneUnderstandingHandler: MonoBehaviour
     {
         count++;
         GetCurrentWalls(); 
-        text.GetComponent<TextMeshProUGUI>().text = $"Click Count: {count}\n Wall Count {observedWalls.Count}";
+        text.GetComponent<TextMeshPro>().text = $"Click Count: {count}\n Wall Count {observedWalls.Count}";
     }
 
     private void ClearMeshes() 
@@ -226,7 +226,7 @@ public class SceneUnderstandingHandler: MonoBehaviour
         this.wall_array = walls.ToArray(typeof(Wall)) as Wall[];
         Debug.Log($"Walls: {this.wall_array.Length}");
         mymain m = new mymain(this.wall_array);
-        await m.NoStart(text_mesh_walls);
+        m.NoStart(text_mesh_walls);
 
     }
     private void DisplayWalls() 
@@ -268,14 +268,14 @@ public class SceneUnderstandingHandler: MonoBehaviour
             ClearMeshes();
             UpdateWallInfo();
             DisplayImages();
-            //text_mesh_walls.GetComponent<TextMeshProUGUI>().text = $"DisplayImagesreturned";
+            text_mesh_walls.GetComponent<TextMeshPro>().text = $"DisplayImagesreturned";
             message_string = $"Wall Count {observedWalls.Count}";
         }
 
         
         string debug_wall_info = "";
         if(wall_centers.Count > 0) debug_wall_info =  $"Center: {wall_centers[0]} , Extent: {wall_extents[0]}";
-        text.GetComponent<TextMeshProUGUI>().text = $"Click Count: {count}\n{message_string}\n{debug_wall_info}";
+        text.GetComponent<TextMeshPro>().text = $"Click Count: {count}\n{message_string}\n{debug_wall_info}";
     }
 
 }
