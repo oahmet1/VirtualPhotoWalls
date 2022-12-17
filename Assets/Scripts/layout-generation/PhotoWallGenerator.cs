@@ -29,6 +29,7 @@ public class PhotoWallGenerator : MonoBehaviour
 
     public PhotoWallGenerator(Wall[] walls, Photograph[] photos, string algorithm, GameObject DebugTextMesh)
     {
+        // ToDo: Remove this and set this.walls = walls
         Wall[] shrinked = new Wall[15];
         for (int i = 0; i < 15; i++)
         {

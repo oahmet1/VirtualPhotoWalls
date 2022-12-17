@@ -167,6 +167,25 @@ public class Wall
         }
     }
 
+    public bool photoIsInsideWall(Photograph photo, float[] margin){
+        // margin[0] = margin top
+        // margin[1] = margin right
+        // margin[2] = margin bottom
+        // margin[3] = margin left 
+        float[] photoPos = photo.GetPosition();
+        float photoWidth = photo.width;
+        float photoHeight = photo.height;
+        float[] wallBoundsX = this.GetBoundsX();
+        float[] wallBoundsY = this.GetBoundsY();
+        if (photoPos[0] - photoWidth/2 - margin[3] > wallBoundsX[0] &&
+            photoPos[0] + photoWidth/2 + margin[1] < wallBoundsX[1] &&
+            photoPos[1] - photoHeight/2 - margin[2] > wallBoundsY[0] &&
+            photoPos[1] + photoHeight/2 + margin[0] < wallBoundsY[1]){
+            return true;
+        }
+        return false;
+    }
+
     public float[] GetBoundsX(){
         return new float[]{-this.width/2, this.width/2};
     }
@@ -174,7 +193,5 @@ public class Wall
     public float[] GetBoundsY(){
         return new float[]{-this.height/2, this.height/2};
     }
-
-
 
 }

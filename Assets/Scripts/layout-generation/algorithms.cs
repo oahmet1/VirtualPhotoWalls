@@ -59,7 +59,7 @@ class NoOverlapRandomLayoutAlgorithm : ILayoutAlgorithm {
 }
 
 class LayoutAlgorithm : ILayoutAlgorithm {
-    private void placePhotosOnCircle(Photograph[] photos, ArrayList prevPhotos, float radius, float centerX, float centerY){
+    private void placePhotosOnCircle(Wall wall, Photograph[] photos, ArrayList prevPhotos, float radius, float centerX, float centerY){
         float margin = 0.05f;
         float angle = Random.Range(0, 2 * Mathf.PI);
         float numSteps  =  Mathf.CeilToInt(2*radius / photos[0].width + 2*radius / photos[0].height);
@@ -119,10 +119,10 @@ class LayoutAlgorithm : ILayoutAlgorithm {
                     }
                 }
             }
-            if (!validPlacementFound){
+            nextPhoto.SetPosition(x + moveX, y + moveY, 0.1f);
+            if (!validPlacementFound || !wall.photoIsInsideWall(nextPhoto, new float[]{0.25, 0.25, 0.25, 0.25})){
                 continue;
             }
-            nextPhoto.SetPosition(x + moveX, y + moveY, 0.1f);
             prevPhotos.Add(nextPhoto);
             angle += angleStep;
             angle %= 2 * Mathf.PI;
@@ -144,7 +144,7 @@ class LayoutAlgorithm : ILayoutAlgorithm {
         
         float r = GetRadius(displayedPhotos, wall);
         while (r <  Mathf.Min(wall.height/2, wall.width/2)){
-            placePhotosOnCircle(photos, displayedPhotos, r, 0, 0);
+            placePhotosOnCircle(wall, photos, displayedPhotos, r, 0, 0);
             r = GetRadius(displayedPhotos, wall);
         }
         
