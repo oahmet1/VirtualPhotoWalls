@@ -113,7 +113,7 @@ public class mymain : MonoBehaviour
                
 #else
 
-        string path = "Assets/Images";
+        string path = "Assets/Images/bmw10_release/bmw10_ims/1";
         string[] files = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".jpg") || s.EndsWith(".png") || s.EndsWith(".jpeg") || s.EndsWith(".bmp") || s.EndsWith(".tiff")).ToArray();
         //string[] files = System.IO.Directory.GetFiles(path, "*.jpeg");
 

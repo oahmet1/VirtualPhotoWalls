@@ -117,13 +117,17 @@ public class Photograph
     }
 
     public bool IsOverlapping(Photograph photo){
-        if (this.x + this.width < photo.x || photo.x + photo.width < this.x){
-            return false;
-        } else if (this.y + this.height < photo.y || photo.y + photo.height < this.y){
-            return false;
-        } else {
+        return this.IsOverlappingWithMargin(photo, 0);
+    }
+    public bool IsOverlappingWithMargin(Photograph photo, float margin){
+        float distanceInXDirection = Math.Abs(this.x - photo.x);
+        float distanceInYDirection = Math.Abs(this.y - photo.y);
+        if (distanceInXDirection < (this.width + photo.width)/2 + margin && distanceInYDirection < (this.height + photo.height)/2 + margin){
+            Debug.Log($"Photos IS overlapping: TX {this.x} TY {this.y} W {this.width} H {this.height} PX {photo.x} PY {photo.y} PW {photo.width} PH {photo.height}");
             return true;
         }
+        Debug.Log($"Photos IS NOT overlapping: TX {this.x} TY {this.y} W {this.width} H {this.height} PX {photo.x} PY {photo.y} PW {photo.width} PH {photo.height}");
+        return false;
     }
 }
 
@@ -163,6 +167,25 @@ public class Wall
         }
     }
 
+    public bool photoIsInsideWall(Photograph photo, float[] margin){
+        // margin[0] = margin top
+        // margin[1] = margin right
+        // margin[2] = margin bottom
+        // margin[3] = margin left 
+        float[] photoPos = photo.GetPosition();
+        float photoWidth = photo.width;
+        float photoHeight = photo.height;
+        float[] wallBoundsX = this.GetBoundsX();
+        float[] wallBoundsY = this.GetBoundsY();
+        if (photoPos[0] - photoWidth/2 - margin[3] > wallBoundsX[0] &&
+            photoPos[0] + photoWidth/2 + margin[1] < wallBoundsX[1] &&
+            photoPos[1] - photoHeight/2 - margin[2] > wallBoundsY[0] &&
+            photoPos[1] + photoHeight/2 + margin[0] < wallBoundsY[1]){
+            return true;
+        }
+        return false;
+    }
+
     public float[] GetBoundsX(){
         return new float[]{-this.width/2, this.width/2};
     }
@@ -170,7 +193,5 @@ public class Wall
     public float[] GetBoundsY(){
         return new float[]{-this.height/2, this.height/2};
     }
-
-
 
 }
