@@ -1,4 +1,5 @@
 using System.Collections;
+using UnityEngine;
 interface ILayoutAlgorithm {
     Layout GenerateLayout(Photograph[] photos, Wall wall);
 }
@@ -55,4 +56,104 @@ class NoOverlapRandomLayoutAlgorithm : ILayoutAlgorithm {
         return new Layout(displayedPhotos.ToArray(typeof(Photograph)) as Photograph[]);
     }
     
+}
+
+class LayoutAlgorithm : ILayoutAlgorithm {
+    private void placePhotosOnCircle(Photograph[] photos, ArrayList prevPhotos, float radius, float centerX, float centerY){
+        float margin = 0.05f;
+        float angle = 0;
+        float angleStep = 360 / 10; // ToDo: figure out good heuristic for the angle step with increasing circle diameter
+        float numSteps  = 10;
+        int numPhotos = photos.Length;
+        for (int i=0; i<numSteps; i++){
+            float x = centerX + radius * Mathf.Cos(angle);
+            float y = centerY + radius * Mathf.Sin(angle);
+            // ToDo: some positions on the circle might need to be skipped
+            Photograph nextPhoto = photos[i % numPhotos].createCopy();
+            nextPhoto.SetPosition(x, y, 0.1f);
+            float moveX = 0;
+            float moveY = 0;
+            bool validPlacementFound = true;
+            for (int j=0; j<prevPhotos.Count; j++){
+                Photograph prevPhoto = prevPhotos[j] as Photograph;
+                if (prevPhoto.IsOverlapping(nextPhoto)){
+                    float[] prevPos = prevPhoto.GetPosition();
+                    float prevWidth = prevPhoto.width;
+                    float prevHeight = prevPhoto.height;
+                    float nextWidth = nextPhoto.width;
+                    float nextHeight = nextPhoto.height;
+                    if (Mathf.Abs(prevPos[0] - x) < Mathf.Abs(prevPos[1] - y)){
+                        float newMoveX = 0;
+                        if (prevPos[0] > x){
+                            newMoveX = prevPos[0] - x - prevWidth/2 - nextWidth/2 - margin;
+                        } else {
+                            newMoveX = prevPos[0] - x + prevWidth/2 + nextWidth/2 + margin;
+                        }
+                        if (moveX * newMoveX < 0){
+                            validPlacementFound = false;
+                            break;
+                        }
+                        else if (Mathf.Abs(newMoveX) > Mathf.Abs(moveX)){
+                            moveX = newMoveX;
+                        }
+                    } else {
+                        float newMoveY = 0;
+                        if (prevPos[1] > y){
+                            newMoveY = prevPos[1] - y - prevHeight/2 - nextWidth/2 - margin;
+                        } else {
+                            newMoveY = prevPos[1] - y + prevHeight/2 + nextWidth/2 + margin;
+                        }
+                        if (moveY * newMoveY < 0){
+                            validPlacementFound = false;
+                            break;
+                        }
+                        else if (Mathf.Abs(newMoveY) > Mathf.Abs(moveY)){
+                            moveY = newMoveY;
+                        }
+                    }
+                }
+            }
+            nextPhoto.SetPosition(x + moveX, y + moveY, 0.1f);
+            prevPhotos.Add(nextPhoto);
+            angle += angleStep;
+        }
+    }
+    public Layout GenerateLayout(Photograph[] photos, Wall wall) {
+        
+        System.Random rnd = new System.Random();
+        //get the first image randomly and place it in the middle of the wall
+        ArrayList displayedPhotos = new ArrayList();
+        ArrayList notDisplayedPhotos = new ArrayList(photos);
+
+        for(int i=0; i<photos.Length; i++){
+            notDisplayedPhotos.Add(photos[i]);
+        }
+
+        int firstPhotoInd = rnd.Next(photos.Length);
+        DisplayAPhoto(displayedPhotos, notDisplayedPhotos, photos[firstPhotoInd], 0, 0);
+        
+        float r = GetRadius(displayedPhotos, wall);
+        placePhotosOnCircle(photos, displayedPhotos, r, 0, 0);
+        
+        return new Layout(displayedPhotos.ToArray(typeof(Photograph)) as Photograph[]);
+    }
+
+    public void DisplayAPhoto(ArrayList displayedPhotos, ArrayList notDisplayedPhotos, Photograph p , float centerX, float centerY){
+        p.SetPosition(centerX, centerY, 0.1f);
+        displayedPhotos.Add(p.createCopy());
+        notDisplayedPhotos.Remove(p);
+    }
+
+    public float GetRadius(ArrayList displayedPhotos, Wall wall){
+        Debug.Log("displayedPhotos.Count: " + displayedPhotos.Count);
+        Photograph p = displayedPhotos[0] as Photograph;
+        Debug.Log("p" + p);
+        return(Mathf.Max(p.width/2, p.height/2));
+        /*
+        for(int i=0; i<displayedPhotos.Count; i++){
+            Photograph p = displayedPhotos[i] as Photograph;
+        }
+        */
+    
+    }
 }

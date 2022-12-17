@@ -26,6 +26,7 @@ public class SceneUnderstandingHandler: MonoBehaviour
     public List<UnityEngine.Quaternion> wall_rotations;
     public List<UnityEngine.Vector3> wall_extents;
 
+    public Wall[] wall_array = new Wall[0];
 
     private int count = 0;
     private bool is_scanning;
@@ -207,13 +208,19 @@ public class SceneUnderstandingHandler: MonoBehaviour
 
             float width = wall.Quads[0].GameObject.transform.localScale.x;
             float height = wall.Quads[0].GameObject.transform.localScale.y;
+            for (int i = 0; i < 256; i++){
+                Debug.Log($"occlsionMask: {wall.Quads[0].OcclusionMask[i]}");
+            }
+            
 
             walls.Add(new Wall(position, rotation, width, height, SceneContent, text_mesh_walls));
         }
-      
-        Debug.Log($"Walls: {(walls.ToArray(typeof(Wall)) as Wall[]).Length}");
-        mymain m = new mymain(walls.ToArray(typeof(Wall)) as Wall[]);
+
+        this.wall_array = walls.ToArray(typeof(Wall)) as Wall[];
+        Debug.Log($"Walls: {this.wall_array.Length}");
+        mymain m = new mymain(this.wall_array);
         await m.NoStart(text_mesh_walls);
+
     }
     private void DisplayWalls() 
     {   
@@ -223,6 +230,17 @@ public class SceneUnderstandingHandler: MonoBehaviour
         else if (UseWallQuads) { observer.RequestMeshData = false; observer.RequestPlaneData = true; }
         observer.UpdateOnDemand();
     }
+
+    private void ClearScene() 
+    {   
+        
+        for(int i = 0; i<this.wall_array.Length; i++)
+        {
+            Destroy(this.wall_array[i].wall);
+        }
+    }
+    
+
     public void UpdateEnvironment()
     {
         var message_string = "";
@@ -232,6 +250,7 @@ public class SceneUnderstandingHandler: MonoBehaviour
         if (is_scanning)
         {
             //observer.Enable();
+            ClearScene();
             DisplayWalls();
             message_string = "Scanning";
         }

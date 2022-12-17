@@ -32,8 +32,6 @@ public class PhotoWallGenerator : MonoBehaviour
         this.walls = walls;
         this.photos = photos;
         this.algorithm = algorithm;
-        //DebugTextMesh.GetComponent<TextMesh>().text = "Exit constructor";
-
     }
 
     public void GenerateLayout()

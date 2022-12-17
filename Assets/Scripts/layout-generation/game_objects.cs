@@ -114,6 +114,10 @@ public class Photograph
         this.z = z;
     }
 
+    public float[] GetPosition(){
+        return new float[]{this.x, this.y, this.z};
+    }
+
     public bool IsOverlapping(Photograph photo){
         if (this.x + this.width < photo.x || photo.x + photo.width < this.x){
             return false;
