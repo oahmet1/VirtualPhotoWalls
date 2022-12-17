@@ -100,7 +100,7 @@ public class mymain : MonoBehaviour
                 //img.Dispose();
                 line = line+1;
            
-                photos[i] = new Photograph(width, height, files[i].Path, bytes);
+                photos[i] = new Photograph(width, height, bytes);
 
                 DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"Opened BMAP with byte length{bytes.Length}";
             }
@@ -108,25 +108,6 @@ public class mymain : MonoBehaviour
             {
                 DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"I was done with line : {line}, {files[i].Path} CANNOT BE OPENED.\nEX:\n{ex}";
             }
-
-            int line2 = 1 ;
-            try{
-            
-        
-            DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"Outside of the IFELSE";
-            line2 = line2+1;
-            PhotoWallGenerator generator = new PhotoWallGenerator(this.walls, photos, "NoOverlapRandom", DebugTextMesh);
-            DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"Created generator";
-            line2 = line2+1;
-            generator.GenerateLayout();
-            //DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"SUCCEEESSSS";
-            line2 = line2+1;
-            }
-            catch(Exception ex)
-            {
-                DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"atline {line2} EXCEPTION: {ex} ";
-            }
-
              
         }
                
@@ -145,11 +126,26 @@ public class mymain : MonoBehaviour
             System.Drawing.Bitmap img = new System.Drawing.Bitmap(files[i]);
             float width = img.Width;
             float height = img.Height;
-            //photos[i] = new Photograph(width, height, files[i]); add this back again with the bytes in the constructor
+            photos[i] = new Photograph(width, height, File.ReadAllBytes(files[i]));
         }
 #endif
         // read all phtographs from the folder
 
+        int line2 = 1 ;
+        try{
+        DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"Outside of the IFELSE";
+        line2 = line2+1;
+        PhotoWallGenerator generator = new PhotoWallGenerator(this.walls, photos, "NoOverlapRandom", DebugTextMesh);
+        DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"Created generator";
+        line2 = line2+1;
+        generator.GenerateLayout();
+        //DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"SUCCEEESSSS";
+        line2 = line2+1;
+        }
+        catch(Exception ex)
+        {
+            DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"atline {line2} EXCEPTION: {ex} ";
+        }
 
         // read all phtographs from the folder
         //string path = "Assets/Images/";

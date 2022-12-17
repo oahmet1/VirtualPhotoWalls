@@ -42,6 +42,7 @@ public class PhotoWallGenerator : MonoBehaviour
        
         debug.text = "Just Generating Layout";
 
+        //LayoutAlgorithm algo = new LayoutAlgorithm();
         NoOverlapRandomLayoutAlgorithm algo = new NoOverlapRandomLayoutAlgorithm();
         line = line + 1;
         debug.text = "Generating Layout";

@@ -11,30 +11,28 @@ public class Photograph
 
      public TextAsset imageAsset;
 
-    public Photograph(float width, float height, string texturePath, byte[] bytes)
+    public Photograph(float width, float height, byte[] bytes)
     {
         this.aspectRatio = width / height;
         this.height = 0.25f;
         this.width = this.aspectRatio * this.height;
-        this.texturePath = texturePath;
         this.bytes = bytes;
     }
 
 
-    public Photograph(float width, float height, float x, float y, float z, string texturePath, byte[] bytes)
+    public Photograph(float width, float height, float x, float y, float z, byte[] bytes)
     {
         this.width = width;
         this.height = height;
         this.x = x;
         this.y = y;
         this.z = z;
-        this.texturePath = texturePath;
         this.bytes = bytes;
     }
 
     public Photograph createCopy()
     {
-        return new Photograph(width, height, x, y, z, texturePath, bytes);
+        return new Photograph(width, height, x, y, z, bytes);
     }
     
     public void Draw(float[] rotationAngles, float[] centerCoordinates, Transform parent, Wall wall){
