@@ -20,19 +20,19 @@ public class mymain : MonoBehaviour
 
     public GameObject textmesh;
   
-    public async Task NoStart(GameObject DebugTextMesh)
+    public async void NoStart(GameObject DebugTextMesh)
     {
-        this.textmesh = DebugTextMesh;
+        //this.textmesh = DebugTextMesh;
 
         /*Wall[] detected_walls = new Wall[3]; // ToDo: Get walls from the camera
         detected_walls[0] = new Wall(new float[] {0f,0f,0f}, new float[]{0f,0f,0f}, 10f, 10f);  // ToDo: fill in correct parameters
         detected_walls[1] = new Wall(new float[] {10f,10f,10f}, new float[]{10f,10f,10f}, 10f, 30f);  // ToDo: fill in correct parameters
         detected_walls[2] = new Wall(new float[] {20f,20f,20f}, new float[]{20f,20f,20f}, 30f, 10f);  // ToDo: fill in correct parameters */
-        DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"IN NO STArt!";
+        DebugTextMesh.GetComponent<TextMeshPro>().text = $"IN NO STArt!";
 
 #if (ENABLE_WINMD_SUPPORT || UNITY_WINRT || UNITY_WINRT_10_0) && !UNITY_EDITOR
         //Windows.Storage.KnownFolders.PicturesLibrary.CreateFolderQuery()
-        //DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"iN IFFF!";
+        //DebugTextMesh.GetComponent<TextMeshPro>().text = $"iN IFFF!";
         
         string path;
         try 
@@ -42,17 +42,17 @@ public class mymain : MonoBehaviour
         catch (Exception ex)
         {
             //code for any other type of exception
-            DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"{ex}";
+            DebugTextMesh.GetComponent<TextMeshPro>().text = $"{ex}";
         }
         
-        //DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"asdlksdkfsdjhf";
+        //DebugTextMesh.GetComponent<TextMeshPro>().text = $"asdlksdkfsdjhf";
         var p = await Windows.Storage.KnownFolders.PicturesLibrary.GetFilesAsync();
-        DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"{p.Count}";
+        DebugTextMesh.GetComponent<TextMeshPro>().text = $"{p.Count}";
 
         path = "";
         //string[] files = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".jpg") || s.EndsWith(".png") || s.EndsWith(".jpeg") || s.EndsWith(".bmp") || s.EndsWith(".tiff")).ToArray();
         Windows.Storage.StorageFile[] files = p.Where(s => s.Path.EndsWith(".jpg") || s.Path.EndsWith(".png") || s.Path.EndsWith(".jpeg") || s.Path.EndsWith(".bmp") || s.Path.EndsWith(".tiff")).ToArray();
-        DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"{files.Length}\n{files[0].Path}";
+        DebugTextMesh.GetComponent<TextMeshPro>().text = $"{files.Length}\n{files[0].Path}";
         Photograph[] photos = new Photograph[files.Length];
         for (int i = 0; i < files.Length; i++)
         {   
@@ -80,7 +80,7 @@ public class mymain : MonoBehaviour
                 //var stream =  stream_op.AsStream();
                 //line = line+1;
 
-                DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"Opend filestream";
+                DebugTextMesh.GetComponent<TextMeshPro>().text = $"Opend filestream";
                 // Bitmap img = LoadBitmap(files[i].Path);
 
                 //Bitmap img = new Bitmap(stream);
@@ -102,11 +102,11 @@ public class mymain : MonoBehaviour
            
                 photos[i] = new Photograph(width, height, bytes);
 
-                DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"Opened BMAP with byte length{bytes.Length}";
+                DebugTextMesh.GetComponent<TextMeshPro>().text = $"Opened BMAP with byte length{bytes.Length}";
             }
             catch (Exception ex)
             {
-                DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"I was done with line : {line}, {files[i].Path} CANNOT BE OPENED.\nEX:\n{ex}";
+                DebugTextMesh.GetComponent<TextMeshPro>().text = $"I was done with line : {line}, {files[i].Path} CANNOT BE OPENED.\nEX:\n{ex}";
             }
              
         }
@@ -133,18 +133,18 @@ public class mymain : MonoBehaviour
 
         int line2 = 1 ;
         try{
-        DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"Outside of the IFELSE";
+        DebugTextMesh.GetComponent<TextMeshPro>().text = $"Outside of the IFELSE";
         line2 = line2+1;
         PhotoWallGenerator generator = new PhotoWallGenerator(this.walls, photos, "NoOverlapRandom", DebugTextMesh);
-        DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"Created generator";
+        DebugTextMesh.GetComponent<TextMeshPro>().text = $"Created generator";
         line2 = line2+1;
         generator.GenerateLayout();
-        //DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"SUCCEEESSSS";
+        //DebugTextMesh.GetComponent<TextMeshPro>().text = $"SUCCEEESSSS";
         line2 = line2+1;
         }
         catch(Exception ex)
         {
-            DebugTextMesh.GetComponent<TextMeshProUGUI>().text = $"atline {line2} EXCEPTION: {ex} ";
+            DebugTextMesh.GetComponent<TextMeshPro>().text = $"atline {line2} EXCEPTION: {ex} ";
         }
 
         // read all phtographs from the folder

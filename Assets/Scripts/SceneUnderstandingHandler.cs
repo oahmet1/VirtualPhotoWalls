@@ -9,16 +9,22 @@ using TMPro;
 using System.Linq;
 using System.Collections;
 using System.Threading.Tasks;
+using UnityEngine.XR;
+using Microsoft.MixedReality.Toolkit.WindowsSceneUnderstanding.Experimental;
 
 public class SceneUnderstandingHandler: MonoBehaviour
 {
-    private IMixedRealitySceneUnderstandingObserver observer;
+    private WindowsSceneUnderstandingObserver observer;
     private Dictionary<int, SpatialAwarenessSceneObject> observedWalls;
     //private List<GameObject> instantiatedPrefabs;
 
+    private string WallObserverName = "Windows Scene Understanding Observer";
     public GameObject text;
     public GameObject text_mesh_walls;
     public GameObject SceneContent;
+
+    public Material VisibleMaterial;
+    public Material OcclusionMaterial;
     public bool UseWallMeshes = true;
     public bool UseWallQuads  = false;
 
@@ -34,9 +40,17 @@ public class SceneUnderstandingHandler: MonoBehaviour
 
     protected void Start()
     {
+        // Use CoreServices to quickly get access to the IMixedRealitySpatialAwarenessSystem
+        var spatialAwarenessService = CoreServices.SpatialAwarenessSystem;
 
-        observer = CoreServices.GetSpatialAwarenessSystemDataProvider<IMixedRealitySceneUnderstandingObserver>();
-       
+        // Cast to the IMixedRealityDataProviderAccess to get access to the data providers
+        var dataProviderAccess = spatialAwarenessService as IMixedRealityDataProviderAccess;
+
+        //observer = CoreServices.GetSpatialAwarenessSystemDataProvider<IMixedRealitySceneUnderstandingObserver>();
+        observer = (WindowsSceneUnderstandingObserver)dataProviderAccess.GetDataProvider<IMixedRealitySceneUnderstandingObserver>(WallObserverName);
+        //var stf= CoreServices.GetSpatialAwarenessSystemDataProvider<IMixedRealitySpatialAwarenessMeshObserver>();
+        
+
         if (observer == null)
         {
             Debug.LogError("Couldn't access Scene Understanding Observer! Please make sure the current build target is set to Universal Windows Platform. "
@@ -54,7 +68,7 @@ public class SceneUnderstandingHandler: MonoBehaviour
         //if (Application.isEditor) { observer.}
         is_scanning = true;
         DisplayWalls();
-        text.GetComponent<TextMeshProUGUI>().text = $"Started Scanning!";
+        text.GetComponent<TextMeshPro>().text = $"Started Scanning!";
     }
 
     protected void Update()
@@ -176,15 +190,52 @@ public class SceneUnderstandingHandler: MonoBehaviour
     {
         count++;
         GetCurrentWalls(); 
-        text.GetComponent<TextMeshProUGUI>().text = $"Click Count: {count}\n Wall Count {observedWalls.Count}";
+        text.GetComponent<TextMeshPro>().text = $"Click Count: {count}\n Wall Count {observedWalls.Count}";
     }
 
-    private void ClearMeshes() 
+    private void ChangeMaterial(Material targetMaterial) 
     {
-        observer.RequestMeshData = false;
-        observer.RequestPlaneData = false;
+        //observer.RequestMeshData = false;
+        //observer.RequestPlaneData = false;
+        //observer.
+        //observer.ClearObservations();
+        observer.DefaultMaterial = targetMaterial;
+        var CurrentObjects = observer.SceneObjects;
+
+        foreach (SpatialAwarenessSceneObject sceneObject in CurrentObjects.Values)
+        {   
+            observer.DefaultMaterial = targetMaterial;
+            if (sceneObject?.GameObject != null) 
+            {
+                Renderer imageRenderer = sceneObject?.GameObject.GetComponent<Renderer>();
+                if (imageRenderer != null)  imageRenderer.material = targetMaterial;
+            }
+
+            if (sceneObject?.Renderer != null)
+            {
+                Renderer imageRenderer = sceneObject.Renderer;
+                if (imageRenderer != null) imageRenderer.material = targetMaterial;
+            }
+
+            foreach (var Mesh in sceneObject.Meshes) 
+            {
+                if (Mesh?.GameObject != null)
+                {
+                    Renderer imageRenderer = Mesh.GameObject.GetComponent<Renderer>();
+                    if (imageRenderer != null)  imageRenderer.material = targetMaterial;
+                }
+            }
+
+            foreach (var Quad in sceneObject.Quads)
+            {
+                if (Quad?.GameObject != null)
+                {
+                    Renderer imageRenderer = Quad.GameObject.GetComponent<Renderer>();
+                    if(imageRenderer != null) imageRenderer.material = targetMaterial;
+                }
+            }
+        }
         
-        observer.ClearObservations();
         observer.UpdateOnDemand();
     }
 
@@ -219,15 +270,16 @@ public class SceneUnderstandingHandler: MonoBehaviour
         this.wall_array = walls.ToArray(typeof(Wall)) as Wall[];
         Debug.Log($"Walls: {this.wall_array.Length}");
         mymain m = new mymain(this.wall_array);
-        await m.NoStart(text_mesh_walls);
+        m.NoStart(text_mesh_walls);
 
     }
     private void DisplayWalls() 
     {   
         
-        observer.UpdateInterval = 3.0f;
+        observer.UpdateInterval = 5.0f;
         if (UseWallMeshes) { observer.RequestMeshData = true; observer.RequestPlaneData = false; }
-        else if (UseWallQuads) { observer.RequestMeshData = false; observer.RequestPlaneData = true; }
+        else if (UseWallQuads) { observer.RequestMeshData = false; observer.RequestPlaneData = true; observer.RequestOcclusionMask = true; }
+        ChangeMaterial(VisibleMaterial);
         observer.UpdateOnDemand();
     }
 
@@ -258,17 +310,17 @@ public class SceneUnderstandingHandler: MonoBehaviour
         {
             //observer.Disable();
             GetCurrentWalls();
-            ClearMeshes();
-            UpdateWallInfo();
+            ChangeMaterial(OcclusionMaterial);
+            //UpdateWallInfo();
             DisplayImages();
-            //text_mesh_walls.GetComponent<TextMeshProUGUI>().text = $"DisplayImagesreturned";
+            text_mesh_walls.GetComponent<TextMeshPro>().text = $"DisplayImagesreturned";
             message_string = $"Wall Count {observedWalls.Count}";
         }
 
         
         string debug_wall_info = "";
         if(wall_centers.Count > 0) debug_wall_info =  $"Center: {wall_centers[0]} , Extent: {wall_extents[0]}";
-        text.GetComponent<TextMeshProUGUI>().text = $"Click Count: {count}\n{message_string}\n{debug_wall_info}";
+        text.GetComponent<TextMeshPro>().text = $"Click Count: {count}\n{message_string}\n{debug_wall_info}";
     }
 
 }
