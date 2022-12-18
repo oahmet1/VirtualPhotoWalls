@@ -10,10 +10,11 @@ using System.Linq;
 using System.Collections;
 using System.Threading.Tasks;
 using UnityEngine.XR;
+using Microsoft.MixedReality.Toolkit.WindowsSceneUnderstanding.Experimental;
 
 public class SceneUnderstandingHandler: MonoBehaviour
 {
-    private IMixedRealitySceneUnderstandingObserver observer;
+    private WindowsSceneUnderstandingObserver observer;
     private Dictionary<int, SpatialAwarenessSceneObject> observedWalls;
     //private List<GameObject> instantiatedPrefabs;
 
@@ -46,7 +47,7 @@ public class SceneUnderstandingHandler: MonoBehaviour
         var dataProviderAccess = spatialAwarenessService as IMixedRealityDataProviderAccess;
 
         //observer = CoreServices.GetSpatialAwarenessSystemDataProvider<IMixedRealitySceneUnderstandingObserver>();
-        observer = dataProviderAccess.GetDataProvider<IMixedRealitySceneUnderstandingObserver>(WallObserverName);
+        observer = (WindowsSceneUnderstandingObserver)dataProviderAccess.GetDataProvider<IMixedRealitySceneUnderstandingObserver>(WallObserverName);
         //var stf= CoreServices.GetSpatialAwarenessSystemDataProvider<IMixedRealitySpatialAwarenessMeshObserver>();
         
 
@@ -198,10 +199,12 @@ public class SceneUnderstandingHandler: MonoBehaviour
         //observer.RequestPlaneData = false;
         //observer.
         //observer.ClearObservations();
+        observer.DefaultMaterial = targetMaterial;
         var CurrentObjects = observer.SceneObjects;
 
         foreach (SpatialAwarenessSceneObject sceneObject in CurrentObjects.Values)
-        {
+        {   
+            observer.DefaultMaterial = targetMaterial;
             if (sceneObject?.GameObject != null) 
             {
                 Renderer imageRenderer = sceneObject?.GameObject.GetComponent<Renderer>();
@@ -232,6 +235,7 @@ public class SceneUnderstandingHandler: MonoBehaviour
                 }
             }
         }
+        
         observer.UpdateOnDemand();
     }
 
