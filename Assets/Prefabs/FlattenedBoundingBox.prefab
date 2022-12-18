@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4213570033617248775}
   - component: {fileID: 4213570033617248770}
   - component: {fileID: 4213570033617248774}
+  - component: {fileID: 472093724717117999}
   m_Layer: 0
   m_Name: FlattenedBoundingBox
   m_TagString: Untagged
@@ -340,7 +341,7 @@ MonoBehaviour:
   handType: 3
   proximityType: 3
   executionOrder: 0
-  constraintOnRotation: 5
+  constraintOnRotation: -1
   useLocalSpaceForConstraint: 0
 --- !u!114 &4213570033617248781
 MonoBehaviour:
@@ -482,3 +483,20 @@ MonoBehaviour:
   autoConstraintSelection: 0
   selectedConstraints:
   - {fileID: 4213570033617248780}
+--- !u!114 &472093724717117999
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4213570033617248779}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 149fa3ae453128b41940b5caa905f8ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  handType: 3
+  proximityType: 3
+  executionOrder: 0
+  constraintOnMovement: 4
+  useLocalSpaceForConstraint: 1
