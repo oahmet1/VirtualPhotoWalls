@@ -71,6 +71,9 @@ public class Photograph
         rotationHandleConfiguration.HandlePrefab = bboxHandleRotationPrefab;
         rotationHandleConfiguration.HandleSize = 0.016f;
         rotationHandleConfiguration.ColliderPadding = Vector3.one * 0.016f;
+        rotationHandleConfiguration.ShowHandleForX = false;
+        rotationHandleConfiguration.ShowHandleForY = false;
+        rotationHandleConfiguration.ShowHandleForZ = false;
         ProximityEffectConfiguration proximityEffectConfiguration = boundsControl.HandleProximityEffectConfig;
         proximityEffectConfiguration.ProximityEffectActive = true;
 
