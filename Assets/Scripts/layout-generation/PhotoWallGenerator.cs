@@ -30,7 +30,7 @@ public class PhotoWallGenerator : MonoBehaviour
     public PhotoWallGenerator(Wall[] walls, Photograph[] photos, string algorithm, GameObject DebugTextMesh)
     {
         // ToDo: Remove this and set this.walls = walls
-        Wall[] shrinked = new Wall[15];
+        Wall[] shrinked = new Wall[6];
         for (int i = 0; i < 15; i++)
         {
             shrinked[i] = walls[i];
@@ -49,8 +49,8 @@ public class PhotoWallGenerator : MonoBehaviour
        
         debug.text = "Just Generating Layout";
 
-        LayoutAlgorithm algo = new LayoutAlgorithm();
-        //NoOverlapRandomLayoutAlgorithm algo = new NoOverlapRandomLayoutAlgorithm();
+        //LayoutAlgorithm algo = new LayoutAlgorithm();
+        NoOverlapRandomLayoutAlgorithm algo = new NoOverlapRandomLayoutAlgorithm();
         line = line + 1;
         debug.text = "Generating Layout";
 

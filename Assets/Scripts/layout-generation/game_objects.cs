@@ -2,6 +2,9 @@ using UnityEngine;
 using System.IO;
 using TMPro;
 using System;
+using Microsoft.MixedReality.Toolkit.UI.BoundsControl;
+
+
 public class Photograph
 {
     public float x, y, z, width, height, aspectRatio;
@@ -51,8 +54,8 @@ public class Photograph
 
         // set up proper bounding boxes
         BoundsControl bbox = photo.AddComponent<BoundsControl>();
-        boundsControl.BoundsControlActivation = BoundsControlActivationType.ActivateByProximityAndPointer;
-        boundsControl.ScaleHandlesConfig.HandleSize = 0.05f;
+        bbox.BoundsControlActivation = Microsoft.MixedReality.Toolkit.UI.BoundsControlTypes.BoundsControlActivationType.ActivateByProximityAndPointer;
+        bbox.ScaleHandlesConfig.HandleSize = 0.05f;
 
         line = line + 1; // 2
        // this.textmesh.GetComponent<TextMesh>().text = "Created the cube";

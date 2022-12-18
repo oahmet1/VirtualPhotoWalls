@@ -120,7 +120,7 @@ class LayoutAlgorithm : ILayoutAlgorithm {
                 }
             }
             nextPhoto.SetPosition(x + moveX, y + moveY, 0.1f);
-            if (!validPlacementFound || !wall.photoIsInsideWall(nextPhoto, new float[]{0.25, 0.25, 0.25, 0.25})){
+            if (!validPlacementFound || !wall.photoIsInsideWall(nextPhoto, new float[]{0.25f, 0.25f, 0.25f, 0.25f})){
                 continue;
             }
             prevPhotos.Add(nextPhoto);
@@ -143,9 +143,11 @@ class LayoutAlgorithm : ILayoutAlgorithm {
         DisplayAPhoto(displayedPhotos, notDisplayedPhotos, photos[firstPhotoInd], 0, 0);
         
         float r = GetRadius(displayedPhotos, wall);
-        while (r <  Mathf.Min(wall.height/2, wall.width/2)){
+        int numCircles = 0;
+        while (r <  Mathf.Min(wall.height/2, wall.width/2) && numCircles <= 2){
             placePhotosOnCircle(wall, photos, displayedPhotos, r, 0, 0);
             r = GetRadius(displayedPhotos, wall);
+            numCircles++;
         }
         
         return new Layout(displayedPhotos.ToArray(typeof(Photograph)) as Photograph[]);
