@@ -48,6 +48,12 @@ public class Photograph
         //this.textmesh.GetComponent<TextMesh>().text = "Starting to draw photo";
 
         var photo = GameObject.CreatePrimitive(PrimitiveType.Cube);
+
+        // set up proper bounding boxes
+        BoundsControl bbox = photo.AddComponent<BoundsControl>();
+        boundsControl.BoundsControlActivation = BoundsControlActivationType.ActivateByProximityAndPointer;
+        boundsControl.ScaleHandlesConfig.HandleSize = 0.05f;
+
         line = line + 1; // 2
        // this.textmesh.GetComponent<TextMesh>().text = "Created the cube";
 
