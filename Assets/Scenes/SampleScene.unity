@@ -1156,9 +1156,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dea206ea644cca84ab4dda3da667283e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberOfPhotosAtEachWall: 0
-  AlgorithmType: 0
-  AlgorithmParameter: 0
+  numberOfPhotosAtEachWall: 8
+  AlgorithmType: 1
+  AlgorithmParameter: 1
   PhotoPrefab: {fileID: 4213570033617248779, guid: 1b8a3aec6f0e3384cb0d8352a1df5699, type: 3}
   DebugTextMesh: {fileID: 1333366768}
   bboxMaterial: {fileID: 2100000, guid: 4a9aae3094118f44593e7f8000e24c31, type: 2}
