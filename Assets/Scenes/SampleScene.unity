@@ -1158,6 +1158,7 @@ MonoBehaviour:
   AlgorithmParameter: 0
   PhotoPrefab: {fileID: 1623923062}
   DebugTextMesh: {fileID: 1333366768}
+  is_running: 0
 --- !u!4 &1003213334
 Transform:
   m_ObjectHideFlags: 0
@@ -1254,10 +1255,11 @@ MonoBehaviour:
   StateDisplayText: {fileID: 1924792834}
   text_mesh_walls: {fileID: 61539328}
   PhotoWallGenerator: {fileID: 1003213333}
-  VisibleMaterial: {fileID: 2100000, guid: 47c3d3b0d8143e3489351498fceed55d, type: 2}
+  VisibleMaterial: {fileID: 2100000, guid: a923a5d1aebc7fe449b4ab3289da537b, type: 2}
   OcclusionMaterial: {fileID: 2100000, guid: a809c7ea182b699409443d46d5b42435, type: 2}
   UseWallMeshes: 0
   UseWallQuads: 1
+  MainCamera: {fileID: 963194225}
   wall_centers: []
   wall_rotations: []
   wall_extents: []

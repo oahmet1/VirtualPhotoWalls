@@ -22,7 +22,7 @@ public class SceneUnderstandingHandler : MonoBehaviour
     public GameObject StateDisplayText;
     public GameObject text_mesh_walls;
 
-
+    
     public PhotoWallGenerator PhotoWallGenerator;
 
     public Material VisibleMaterial;
@@ -31,6 +31,7 @@ public class SceneUnderstandingHandler : MonoBehaviour
     public bool UseWallMeshes = true;
     public bool UseWallQuads = false;
 
+    public GameObject MainCamera;
     public List<UnityEngine.Vector3> wall_centers;
     public List<UnityEngine.Quaternion> wall_rotations;
     public List<UnityEngine.Vector3> wall_extents;
@@ -40,7 +41,11 @@ public class SceneUnderstandingHandler : MonoBehaviour
 
     private int count = 0;
     private bool is_scanning;
-  
+
+    private bool update_frames = false;
+    private bool cancel_jobs   = false;
+
+    public IEnumerator LayoutGeneration;
 
     protected async void Start()
     {
@@ -69,17 +74,33 @@ public class SceneUnderstandingHandler : MonoBehaviour
 
         FileReader Reader = new FileReader();
         photos = await Reader.ReadFiles(text_mesh_walls);
-
+       
         //instantiatedPrefabs = new List<GameObject>();
         //if (Application.isEditor) { observer.}
+
+        StateDisplayText.GetComponent<TextMeshPro>().text = $"Loading!";
         is_scanning = true;
         DisplayWalls();
+        observer.Initialize();
         StateDisplayText.GetComponent<TextMeshPro>().text = $"Started Scanning!";
     }
 
     protected void Update()
-    { 
-
+    {
+        if (update_frames) 
+        {
+            StateDisplayText.GetComponent<TextMeshPro>().text = $"Generating Layout!";
+            StartCoroutine(LayoutGeneration);
+            update_frames = false;
+            
+        }
+        if (cancel_jobs)
+        {
+            StateDisplayText.GetComponent<TextMeshPro>().text = $"Canceling Layout!";
+            StopCoroutine(LayoutGeneration);
+            cancel_jobs = false;
+            ClearScene();
+        }
     }
     Bounds getRenderBounds(GameObject objeto)
     {
@@ -265,17 +286,17 @@ public class SceneUnderstandingHandler : MonoBehaviour
 
             float width = wall.Quads[0].GameObject.transform.localScale.x;
             float height = wall.Quads[0].GameObject.transform.localScale.y;
-            for (int i = 0; i < 256; i++){
-                Debug.Log($"OcclusionMask: {wall.Quads[0].OcclusionMask[i]}");
-            }
             
-
-            walls.Add(new Wall(position, rotation, width, height));
+            walls.Add(new Wall(position, rotation, width, height, MainCamera.transform.position ));
         }
 
         wall_array = walls.ToArray(typeof(Wall)) as Wall[];
         Debug.Log($"Walls: {wall_array.Length}");
-        PhotoWallGenerator.GenerateLayout(wall_array, photos);
+        //PhotoWallGenerator.GenerateLayout(wall_array, photos);
+
+        update_frames = true;
+        LayoutGeneration = PhotoWallGenerator.GenerateLayoutAsync(wall_array, photos);
+
 
     }
     private void DisplayWalls() 
@@ -283,7 +304,7 @@ public class SceneUnderstandingHandler : MonoBehaviour
         
         observer.UpdateInterval = 5.0f;
         if (UseWallMeshes) { observer.RequestMeshData = true; observer.RequestPlaneData = false; }
-        else if (UseWallQuads) { observer.RequestMeshData = false; observer.RequestPlaneData = true; observer.RequestOcclusionMask = true; }
+        else if (UseWallQuads) { observer.RequestMeshData = false; observer.RequestPlaneData = true; observer.RequestOcclusionMask = false; }
         ChangeMaterial(VisibleMaterial);
         observer.UpdateOnDemand();
     }
@@ -306,8 +327,12 @@ public class SceneUnderstandingHandler : MonoBehaviour
 
         if (is_scanning)
         {
+            //if (update_frames) cancel_jobs = true;
             //observer.Enable();
-            ClearScene();
+            if (PhotoWallGenerator.is_running) 
+            {
+                cancel_jobs = true;
+            }
             DisplayWalls();
             message_string = "Scanning";
         }

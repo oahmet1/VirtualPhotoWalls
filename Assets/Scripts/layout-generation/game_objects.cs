@@ -149,22 +149,24 @@ public class Wall
     public float width, height;
     public Transform transform ;
     public GameObject wall;
-    public Wall(float[] centerCoordinates, float[] rotationAngles, float width, float height)
+    Vector3 mainCameraPos;
+    public Wall(float[] centerCoordinates, float[] rotationAngles, float width, float height, Vector3 mainCameraPos)
     {
         this.centerCoordinates = centerCoordinates;
         this.rotationAngles = rotationAngles;
         this.width = width;
-        this.height = height; 
+        this.height = height;
 
-        var wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        this.mainCameraPos = mainCameraPos;
+        var wall = new GameObject();
         //wall.transform.parent = sceneContent.transform;
         this.wall = wall;
         this.transform = wall.transform;
         //DebugTextMesh.GetComponent<TextMeshPro>().text = $"width: {width} \n height: {height} \n centerCoordinates: {centerCoordinates[0]}, {centerCoordinates[1]}, {centerCoordinates[2]} \n rotationAngles: {rotationAngles[0]}, {rotationAngles[1]}, {rotationAngles[2]}";
 
-        Material imageMaterial = new Material(Shader.Find("Standard"));
-        Renderer imageRenderer = wall.GetComponent<Renderer>();
-        imageRenderer.material = imageMaterial;
+        //Material imageMaterial = new Material(Shader.Find("Standard"));
+        //Renderer imageRenderer = wall.GetComponent<Renderer>();
+        //imageRenderer.material = imageMaterial;
 
     }
 
@@ -174,8 +176,6 @@ public class Wall
         this.transform.position = new Vector3(this.centerCoordinates[0], this.centerCoordinates[1], this.centerCoordinates[2]);
         //photo.transform.rotation = new Vector3((float)0, (float)1, (float)0);
         this.transform.Rotate(this.rotationAngles[0], this.rotationAngles[1], this.rotationAngles[2]);
-
-        Vector3 mainCameraPos = GameObject.Find("Main Camera").GetComponent<Camera>().transform.position;
         
         float res = Vector3.Dot(wall.transform.position -mainCameraPos, wall.transform.forward);
         if(res > 0){
