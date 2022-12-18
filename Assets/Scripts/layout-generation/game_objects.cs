@@ -11,6 +11,7 @@ public class Photograph
     string texturePath;
     Wall wall;
     byte[] bytes;
+    public GameObject photo;
 
      public TextAsset imageAsset;
 
@@ -20,6 +21,7 @@ public class Photograph
         this.height = 0.25f;
         this.width = this.aspectRatio * this.height;
         this.bytes = bytes;
+        
     }
 
 
@@ -52,7 +54,7 @@ public class Photograph
             
 
         //var photo = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        var photo = GameObject.Instantiate(PhotoPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
+        photo = GameObject.Instantiate(PhotoPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
         //// set up proper bounding boxes
         //BoundsControl bbox = photo.AddComponent<BoundsControl>();
         //bbox.BoundsControlActivation = Microsoft.MixedReality.Toolkit.UI.BoundsControlTypes.BoundsControlActivationType.ActivateByProximityAndPointer;

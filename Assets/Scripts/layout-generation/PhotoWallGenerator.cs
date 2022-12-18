@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using TMPro;
 using System;
-
+using UnityEditor;
 
 public class Layout
 {
@@ -16,6 +16,13 @@ public class Layout
     public void  Draw(float[] rotationAngles, float[] centerCoordinates, Transform parent, Wall wall, GameObject PhotoPrefab){
         foreach(Photograph photo in photos){
             photo.Draw(rotationAngles, centerCoordinates, parent, wall, PhotoPrefab);
+        }
+    }
+    public void Clear()
+    {
+        foreach (Photograph photo in photos)
+        {
+            GameObject.Destroy(photo.photo);
         }
     }
 }
@@ -33,6 +40,7 @@ public class PhotoWallGenerator : MonoBehaviour
     public int AlgorithmParameter;
     public GameObject PhotoPrefab;
     public GameObject DebugTextMesh;
+    Layout[] layouts;
 
     public bool is_running= false;
     public void GenerateLayout(Wall[] walls, Photograph[] photos)
@@ -59,7 +67,7 @@ public class PhotoWallGenerator : MonoBehaviour
         debug.text = "Generating Layout";
 
         int numPhotos = 0;
-        Layout[] layouts = new Layout[walls.Length];
+        layouts = new Layout[walls.Length];
         line = line + 1;
         for (int i = 0; i < walls.Length; i++)
         {
@@ -153,5 +161,12 @@ public class PhotoWallGenerator : MonoBehaviour
         void Update()
     {
         
+    }
+    void ClearObjects() 
+    {
+        foreach (var layout in this.layouts) 
+        {
+            layout.Clear();
+        }
     }
 }

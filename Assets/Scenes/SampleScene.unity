@@ -176,7 +176,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 147370468}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -369,11 +369,11 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1257845859}
-  - {fileID: 1623923063}
   - {fileID: 61539329}
   - {fileID: 1333366769}
   - {fileID: 892848459}
   - {fileID: 7411499169069276526}
+  - {fileID: 1770529501}
   - {fileID: 2115622135}
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -985,7 +985,7 @@ RectTransform:
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 147370468}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1896,6 +1896,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FlattenedBoundingBox
       objectReference: {fileID: 0}
+    - target: {fileID: 4213570033617248779, guid: 1b8a3aec6f0e3384cb0d8352a1df5699, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1b8a3aec6f0e3384cb0d8352a1df5699, type: 3}
 --- !u!4 &1257845859 stripped
@@ -1935,7 +1939,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 147370468}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2174,11 +2178,6 @@ Transform:
   m_Father: {fileID: 2138066533}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &1623923063 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7991060403944199511, guid: 6e272760501ada9469047450f4225d5d, type: 3}
-  m_PrefabInstance: {fileID: 1944259937}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1691990065
 GameObject:
   m_ObjectHideFlags: 0
@@ -2374,6 +2373,11 @@ MonoBehaviour:
   showHandleForX: 1
   showHandleForY: 1
   showHandleForZ: 1
+--- !u!4 &1770529501 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5005502190793883059, guid: 6e272760501ada9469047450f4225d5d, type: 3}
+  m_PrefabInstance: {fileID: 1944259937}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1924792834
 GameObject:
   m_ObjectHideFlags: 0
@@ -4888,7 +4892,7 @@ Transform:
   m_Children:
   - {fileID: 7411499168121551647}
   m_Father: {fileID: 147370468}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7411499169069276527
 MonoBehaviour:
@@ -5183,7 +5187,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b31b6fc6b6a28249adae3628ec542ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  solverHandler: {fileID: 7411499169069276520}
 --- !u!114 &8171686746501319372
 MonoBehaviour:
   m_ObjectHideFlags: 0
