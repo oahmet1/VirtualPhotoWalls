@@ -6,7 +6,7 @@ using System;
 
 public class Layout
 {
-    private Photograph[] photos;
+    public Photograph[] photos;
 
     public Layout(Photograph[] photos)
     {
@@ -57,6 +57,7 @@ public class PhotoWallGenerator : MonoBehaviour
         line = line + 1;
         debug.text = "Generating Layout";
 
+        int numPhotos = 0;
         Layout[] layouts = new Layout[walls.Length];
         line = line + 1;
         for (int i = 0; i < walls.Length; i++)
@@ -64,7 +65,9 @@ public class PhotoWallGenerator : MonoBehaviour
             debug.text = "Wall " + i + " of " + walls.Length;
             layouts[i] = algo.GenerateLayout(photos ,walls[i] );
             debug.text = "Wall " + i + " of " + walls.Length + " done";
+            numPhotos += layouts[i].photos.Length;
         }
+        Debug.Log("Number of photos: " + numPhotos);
         line = line + 1;
         for (int i = 0; i < walls.Length; i++)
         {
