@@ -13,45 +13,47 @@ public class Layout
         this.photos = photos;
     }
 
-    public void Draw(float[] rotationAngles, float[] centerCoordinates, Transform parent, Wall wall){
+    public void Draw(float[] rotationAngles, float[] centerCoordinates, Transform parent, Wall wall, GameObject PhotoPrefab){
         foreach(Photograph photo in photos){
-            photo.Draw(rotationAngles, centerCoordinates, parent, wall);
+            photo.Draw(rotationAngles, centerCoordinates, parent, wall, PhotoPrefab);
         }
     }
 }
 
+public enum AlgorithmTypes 
+{
+    RandomLayout = 0,
+    CircularLayout= 1
+}
 public class PhotoWallGenerator : MonoBehaviour
 {
-    private Wall[] walls;
-    private Photograph[] photos;
+ 
+    public int numberOfPhotosAtEachWall;
+    public AlgorithmTypes AlgorithmType;
+    public int AlgorithmParameter;
+    public GameObject PhotoPrefab;
+    public GameObject DebugTextMesh;
 
-    private string algorithm;
-
-    public PhotoWallGenerator(Wall[] walls, Photograph[] photos, string algorithm, GameObject DebugTextMesh)
-    {
-        // ToDo: Remove this and set this.walls = walls
-        /*Wall[] shrinked = new Wall[6];
-        for (int i = 0; i < 6; i++)
-        {
-            shrinked[i] = walls[i];
-        }
-
-        this.walls = shrinked;*/
-        this.walls = walls;
-        this.photos = photos;
-        this.algorithm = algorithm;
-    }
-
-    public void GenerateLayout()
+    public void GenerateLayout(Wall[] walls, Photograph[] photos)
     {
         var debug = GameObject.Find("DebugBox2").GetComponent<TextMeshPro>();
         int line = 1;
-        try{
-       
-        debug.text = "Just Generating Layout";
+        try
+        {
 
-        //LayoutAlgorithm algo = new LayoutAlgorithm();
-        NoOverlapRandomLayoutAlgorithm algo = new NoOverlapRandomLayoutAlgorithm();
+            debug.text = "Just Generating Layout";
+
+            ILayoutAlgorithm algo;
+            if (AlgorithmType == AlgorithmTypes.CircularLayout)
+            {
+                algo = new LayoutAlgorithm();
+            }
+            else 
+            {
+                algo = new NoOverlapRandomLayoutAlgorithm();
+            }
+
+            
         line = line + 1;
         debug.text = "Generating Layout";
 
@@ -68,7 +70,7 @@ public class PhotoWallGenerator : MonoBehaviour
         {
             debug.text = "Wall " + i + " of " + walls.Length + "drawing";
             if (layouts[i] != null){
-                layouts[i].Draw(walls[i].rotationAngles, walls[i].centerCoordinates, walls[i].transform, walls[i]);
+                layouts[i].Draw(walls[i].rotationAngles, walls[i].centerCoordinates, walls[i].transform, walls[i], PhotoPrefab);
             } else {
                 line = -1000000000;
             }
@@ -85,11 +87,7 @@ public class PhotoWallGenerator : MonoBehaviour
             //throw divide by zero exception
             debug.text = "Generate Layout : Error on line " + line + " " + ex;
         }
-        
-
-
-       
-        
+                
     }
 
     // Update is called once per frame

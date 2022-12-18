@@ -12,33 +12,37 @@ using System.Threading.Tasks;
 using UnityEngine.XR;
 using Microsoft.MixedReality.Toolkit.WindowsSceneUnderstanding.Experimental;
 
-public class SceneUnderstandingHandler: MonoBehaviour
+public class SceneUnderstandingHandler : MonoBehaviour
 {
     private WindowsSceneUnderstandingObserver observer;
     private Dictionary<int, SpatialAwarenessSceneObject> observedWalls;
     //private List<GameObject> instantiatedPrefabs;
 
     private string WallObserverName = "Windows Scene Understanding Observer";
-    public GameObject text;
+    public GameObject StateDisplayText;
     public GameObject text_mesh_walls;
-    public GameObject SceneContent;
+
+
+    public PhotoWallGenerator PhotoWallGenerator;
 
     public Material VisibleMaterial;
     public Material OcclusionMaterial;
+
     public bool UseWallMeshes = true;
-    public bool UseWallQuads  = false;
+    public bool UseWallQuads = false;
 
     public List<UnityEngine.Vector3> wall_centers;
     public List<UnityEngine.Quaternion> wall_rotations;
     public List<UnityEngine.Vector3> wall_extents;
 
-    public Wall[] wall_array = new Wall[0];
+    private Photograph[] photos;
+    private Wall[] wall_array;
 
     private int count = 0;
     private bool is_scanning;
   
 
-    protected void Start()
+    protected async void Start()
     {
         // Use CoreServices to quickly get access to the IMixedRealitySpatialAwarenessSystem
         var spatialAwarenessService = CoreServices.SpatialAwarenessSystem;
@@ -63,12 +67,14 @@ public class SceneUnderstandingHandler: MonoBehaviour
         wall_rotations = new List<Quaternion>();
         wall_extents   = new List<Vector3>();
 
+        FileReader Reader = new FileReader();
+        photos = await Reader.ReadFiles(text_mesh_walls);
 
         //instantiatedPrefabs = new List<GameObject>();
         //if (Application.isEditor) { observer.}
         is_scanning = true;
         DisplayWalls();
-        text.GetComponent<TextMeshPro>().text = $"Started Scanning!";
+        StateDisplayText.GetComponent<TextMeshPro>().text = $"Started Scanning!";
     }
 
     protected void Update()
@@ -189,8 +195,8 @@ public class SceneUnderstandingHandler: MonoBehaviour
     public void IncreaseCounter() 
     {
         count++;
-        GetCurrentWalls(); 
-        text.GetComponent<TextMeshPro>().text = $"Click Count: {count}\n Wall Count {observedWalls.Count}";
+        GetCurrentWalls();
+        StateDisplayText.GetComponent<TextMeshPro>().text = $"Click Count: {count}\n Wall Count {observedWalls.Count}";
     }
 
     private void ChangeMaterial(Material targetMaterial) 
@@ -239,7 +245,7 @@ public class SceneUnderstandingHandler: MonoBehaviour
         observer.UpdateOnDemand();
     }
 
-    public async void DisplayImages()
+    public void DisplayImages()
     {
         ArrayList walls = new ArrayList();
         foreach (var wall in observedWalls.Values)
@@ -260,17 +266,16 @@ public class SceneUnderstandingHandler: MonoBehaviour
             float width = wall.Quads[0].GameObject.transform.localScale.x;
             float height = wall.Quads[0].GameObject.transform.localScale.y;
             for (int i = 0; i < 256; i++){
-                Debug.Log($"occlsionMask: {wall.Quads[0].OcclusionMask[i]}");
+                Debug.Log($"OcclusionMask: {wall.Quads[0].OcclusionMask[i]}");
             }
             
 
-            walls.Add(new Wall(position, rotation, width, height, SceneContent, text_mesh_walls));
+            walls.Add(new Wall(position, rotation, width, height));
         }
 
-        this.wall_array = walls.ToArray(typeof(Wall)) as Wall[];
-        Debug.Log($"Walls: {this.wall_array.Length}");
-        mymain m = new mymain(this.wall_array);
-        m.NoStart(text_mesh_walls);
+        wall_array = walls.ToArray(typeof(Wall)) as Wall[];
+        Debug.Log($"Walls: {wall_array.Length}");
+        PhotoWallGenerator.GenerateLayout(wall_array, photos);
 
     }
     private void DisplayWalls() 
@@ -320,7 +325,7 @@ public class SceneUnderstandingHandler: MonoBehaviour
         
         string debug_wall_info = "";
         if(wall_centers.Count > 0) debug_wall_info =  $"Center: {wall_centers[0]} , Extent: {wall_extents[0]}";
-        text.GetComponent<TextMeshPro>().text = $"Click Count: {count}\n{message_string}\n{debug_wall_info}";
+        StateDisplayText.GetComponent<TextMeshPro>().text = $"Click Count: {count}\n{message_string}\n{debug_wall_info}";
     }
 
 }

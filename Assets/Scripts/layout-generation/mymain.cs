@@ -6,30 +6,16 @@ using TMPro;
 using System;
 using System.Threading.Tasks;
 
-
-
-//Windows.Storage.KnownFolderId.Pict
-//using Win
-public class mymain : MonoBehaviour
+public class FileReader : MonoBehaviour
 {
-    private Wall[] walls;
-    public mymain(Wall[] walls)
-    {
-        this.walls = walls;
-    }
 
     public GameObject textmesh;
-  
-    public async void NoStart(GameObject DebugTextMesh)
+    
+    public async Task<Photograph[]> ReadFiles(GameObject DebugTextMesh)
     {
-        //this.textmesh = DebugTextMesh;
 
-        /*Wall[] detected_walls = new Wall[3]; // ToDo: Get walls from the camera
-        detected_walls[0] = new Wall(new float[] {0f,0f,0f}, new float[]{0f,0f,0f}, 10f, 10f);  // ToDo: fill in correct parameters
-        detected_walls[1] = new Wall(new float[] {10f,10f,10f}, new float[]{10f,10f,10f}, 10f, 30f);  // ToDo: fill in correct parameters
-        detected_walls[2] = new Wall(new float[] {20f,20f,20f}, new float[]{20f,20f,20f}, 30f, 10f);  // ToDo: fill in correct parameters */
         DebugTextMesh.GetComponent<TextMeshPro>().text = $"IN NO STArt!";
-
+        Photograph[] photos;
 #if (ENABLE_WINMD_SUPPORT || UNITY_WINRT || UNITY_WINRT_10_0) && !UNITY_EDITOR
         //Windows.Storage.KnownFolders.PicturesLibrary.CreateFolderQuery()
         //DebugTextMesh.GetComponent<TextMeshPro>().text = $"iN IFFF!";
@@ -53,7 +39,8 @@ public class mymain : MonoBehaviour
         //string[] files = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".jpg") || s.EndsWith(".png") || s.EndsWith(".jpeg") || s.EndsWith(".bmp") || s.EndsWith(".tiff")).ToArray();
         Windows.Storage.StorageFile[] files = p.Where(s => s.Path.EndsWith(".jpg") || s.Path.EndsWith(".png") || s.Path.EndsWith(".jpeg") || s.Path.EndsWith(".bmp") || s.Path.EndsWith(".tiff")).ToArray();
         DebugTextMesh.GetComponent<TextMeshPro>().text = $"{files.Length}\n{files[0].Path}";
-        Photograph[] photos = new Photograph[files.Length];
+
+        photos = new Photograph[files.Length];
         for (int i = 0; i < files.Length; i++)
         {   
                     
@@ -113,11 +100,11 @@ public class mymain : MonoBehaviour
                
 #else
 
-        string path = "Assets/Images/bmw10_release/bmw10_ims/1";
+    string path = "Assets/Images/bmw10_release/bmw10_ims/1";
         string[] files = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".jpg") || s.EndsWith(".png") || s.EndsWith(".jpeg") || s.EndsWith(".bmp") || s.EndsWith(".tiff")).ToArray();
         //string[] files = System.IO.Directory.GetFiles(path, "*.jpeg");
 
-        Photograph[] photos = new Photograph[files.Length];
+        photos = new Photograph[files.Length];
         for (int i = 0; i < files.Length; i++)
         {
             FileInfo file = new FileInfo(files[i]);
@@ -129,44 +116,8 @@ public class mymain : MonoBehaviour
             photos[i] = new Photograph(width, height, File.ReadAllBytes(files[i]));
         }
 #endif
-        // read all phtographs from the folder
-
-        int line2 = 1 ;
-        try{
-        DebugTextMesh.GetComponent<TextMeshPro>().text = $"Outside of the IFELSE";
-        line2 = line2+1;
-        PhotoWallGenerator generator = new PhotoWallGenerator(this.walls, photos, "NoOverlapRandom", DebugTextMesh);
-        DebugTextMesh.GetComponent<TextMeshPro>().text = $"Created generator";
-        line2 = line2+1;
-        generator.GenerateLayout();
-        //DebugTextMesh.GetComponent<TextMeshPro>().text = $"SUCCEEESSSS";
-        line2 = line2+1;
-        }
-        catch(Exception ex)
-        {
-            DebugTextMesh.GetComponent<TextMeshPro>().text = $"atline {line2} EXCEPTION: {ex} ";
-        }
-
-        // read all phtographs from the folder
-        //string path = "Assets/Images/";
-        
+        return photos;
     }
-  /*  public static Bitmap LoadBitmap(string path)
-    {
-        //Open file in read only mode
-        using (FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read))
-        //Get a binary reader for the file stream
-        using (BinaryReader reader = new BinaryReader(stream))
-        {
-            //copy the content of the file into a memory stream
-            var memoryStream = new MemoryStream(reader.ReadBytes((int)stream.Length));
-            //make a new Bitmap object the owner of the MemoryStream
-            return new Bitmap(memoryStream);
-        }
-    }
-*/
-    void Update()
-    {
-        
-    }
+      
+    
 }

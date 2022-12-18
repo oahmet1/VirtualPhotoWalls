@@ -38,7 +38,7 @@ public class Photograph
         return new Photograph(width, height, x, y, z, bytes);
     }
     
-    public void Draw(float[] rotationAngles, float[] centerCoordinates, Transform parent, Wall wall){
+    public void Draw(float[] rotationAngles, float[] centerCoordinates, Transform parent, Wall wall, GameObject PhotoPrefab){
         
         
         var debug = GameObject.Find("DebugBox").GetComponent<TextMeshPro>();
@@ -49,28 +49,29 @@ public class Photograph
 
         // ToDo: Apply photograph texture to the rectangle
         //this.textmesh.GetComponent<TextMesh>().text = "Starting to draw photo";
+            
 
-        var photo = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        //var photo = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        var photo = GameObject.Instantiate(PhotoPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
+        //// set up proper bounding boxes
+        //BoundsControl bbox = photo.AddComponent<BoundsControl>();
+        //bbox.BoundsControlActivation = Microsoft.MixedReality.Toolkit.UI.BoundsControlTypes.BoundsControlActivationType.ActivateByProximityAndPointer;
+        //bbox.ScaleHandlesConfig.HandleSize = 0.05f;
 
-        // set up proper bounding boxes
-        BoundsControl bbox = photo.AddComponent<BoundsControl>();
-        bbox.BoundsControlActivation = Microsoft.MixedReality.Toolkit.UI.BoundsControlTypes.BoundsControlActivationType.ActivateByProximityAndPointer;
-        bbox.ScaleHandlesConfig.HandleSize = 0.05f;
-
-        line = line + 1; // 2
-       // this.textmesh.GetComponent<TextMesh>().text = "Created the cube";
+            line = line + 1; // 2
+       // this.textmesh.GetComponent<TextMeshPro>().text = "Created the cube";
 
         photo.transform.localScale = new Vector3(this.width/wall.width, this.height/wall.height, 0.05f);
-        line = line + 1; // 3
-        //photo.transform.Rotate(rotationAngles[0], rotationAngles[1], rotationAngles[2]);
-        photo.transform.parent = parent;
-        line = line + 1; // 4
-        photo.transform.position += new Vector3(x/wall.width, y/wall.height, 1f);
-        line = line + 1; // 5
+        //line = line + 1; // 3
+        ////photo.transform.Rotate(rotationAngles[0], rotationAngles[1], rotationAngles[2]);
+            photo.transform.parent = parent;
+            line = line + 1; // 4
+            photo.transform.position += new Vector3(x / wall.width, y / wall.height, 1f);
+            line = line + 1; // 5
 
-        //this.textmesh.GetComponent<TextMesh>().text = "Scaled the cube";
+            //this.textmesh.GetComponent<TextMeshPro>().text = "Scaled the cube";
 
-        Debug.Log("x is :"  + parent.localScale.x);
+            Debug.Log("x is :"  + parent.localScale.x);
 
         Mesh mesh = photo.GetComponent<MeshFilter>().mesh;
         line = line + 1; // 6
@@ -93,15 +94,16 @@ public class Photograph
         line = line + 1; // 11
 
         
-        Material imageMaterial =new Material(Shader.Find("Standard"));
-        line = line + 1; // 12
-        imageMaterial.SetTexture("_MainTex", texture);
-        line = line + 1; // 13
+        //Material imageMaterial =new Material(Shader.Find("Standard"));
+        //line = line + 1; // 12
+        //imageMaterial.SetTexture("_MainTex", texture);
+        //line = line + 1; // 13
         
         Renderer imageRenderer =photo.GetComponent<Renderer>();
         line = line + 1;
-        imageRenderer.material = imageMaterial;
-        line = line + 1;
+        //imageRenderer.material = imageMaterial;
+        imageRenderer.material.SetTexture("_MainTex", texture);
+            line = line + 1;
 
         //textmesh.GetComponent<TextMesh>().text = "Done Drawing photo, assigned material";
 
@@ -147,7 +149,7 @@ public class Wall
     public float width, height;
     public Transform transform ;
     public GameObject wall;
-    public Wall(float[] centerCoordinates, float[] rotationAngles, float width, float height, GameObject sceneContent, GameObject DebugTextMesh)
+    public Wall(float[] centerCoordinates, float[] rotationAngles, float width, float height)
     {
         this.centerCoordinates = centerCoordinates;
         this.rotationAngles = rotationAngles;
