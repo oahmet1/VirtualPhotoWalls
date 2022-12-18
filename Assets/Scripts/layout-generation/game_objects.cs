@@ -11,6 +11,7 @@ public class Photograph
     string texturePath;
     Wall wall;
     byte[] bytes;
+    public GameObject photo;
 
      public TextAsset imageAsset;
 
@@ -20,6 +21,7 @@ public class Photograph
         this.height = 0.25f;
         this.width = this.aspectRatio * this.height;
         this.bytes = bytes;
+        
     }
 
 

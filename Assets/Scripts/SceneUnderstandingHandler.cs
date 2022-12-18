@@ -3,12 +3,9 @@ using Microsoft.MixedReality.Toolkit.Experimental.SpatialAwareness;
 using Microsoft.MixedReality.Toolkit.SpatialAwareness;
 using System.Collections.Generic;
 using Microsoft.MixedReality.Toolkit;
-using Unity.XR.CoreUtils;
 using TMPro;
 using System.Linq;
 using System.Collections;
-using System.Threading.Tasks;
-using UnityEngine.XR;
 using Microsoft.MixedReality.Toolkit.WindowsSceneUnderstanding.Experimental;
 
 public class SceneUnderstandingHandler : MonoBehaviour
@@ -43,6 +40,7 @@ public class SceneUnderstandingHandler : MonoBehaviour
 
     private bool update_frames = false;
     private bool cancel_jobs   = false;
+    private bool started_generation = false;
 
     public IEnumerator LayoutGeneration;
 
@@ -88,18 +86,26 @@ public class SceneUnderstandingHandler : MonoBehaviour
     {
         if (update_frames) 
         {
-            StateDisplayText.GetComponent<TextMeshPro>().text = $"Generating Layout!";
+            StateDisplayText.GetComponent<TextMeshPro>().text = $"Updating Scene!";
             StartCoroutine(LayoutGeneration);
             update_frames = false;
+            started_generation = true;
+            
             
         }
         if (cancel_jobs)
         {
-            StateDisplayText.GetComponent<TextMeshPro>().text = $"Canceling Layout!";
+            // StateDisplayText.GetComponent<TextMeshPro>().text = $"Canceling Layout!";
             StopCoroutine(LayoutGeneration);
             cancel_jobs = false;
             ClearScene();
         }
+        if (started_generation && !PhotoWallGenerator.is_running) 
+        {
+            started_generation = false;
+            StateDisplayText.GetComponent<TextMeshPro>().text = $"Scene Updated!";
+        }
+        
     }
     Bounds getRenderBounds(GameObject objeto)
     {
@@ -211,14 +217,6 @@ public class SceneUnderstandingHandler : MonoBehaviour
             Debug.Log(msg);
         }
     }
-
-    public void IncreaseCounter() 
-    {
-        count++;
-        GetCurrentWalls();
-        StateDisplayText.GetComponent<TextMeshPro>().text = $"Click Count: {count}\n Wall Count {observedWalls.Count}";
-    }
-
     private void ChangeMaterial(Material targetMaterial) 
     {
         //observer.RequestMeshData = false;
@@ -332,8 +330,9 @@ public class SceneUnderstandingHandler : MonoBehaviour
             {
                 cancel_jobs = true;
             }
+            if(!cancel_jobs) ClearScene();
             DisplayWalls();
-            message_string = "Scanning";
+            message_string = "Scanning the Room!";
         }
         else 
         {
@@ -343,13 +342,10 @@ public class SceneUnderstandingHandler : MonoBehaviour
             //UpdateWallInfo();
             DisplayImages();
             text_mesh_walls.GetComponent<TextMeshPro>().text = $"DisplayImagesreturned";
-            message_string = $"Wall Count {observedWalls.Count}";
+            message_string = $"{observedWalls.Count} Walls Detected!";
         }
 
-        
-        string debug_wall_info = "";
-        if(wall_centers.Count > 0) debug_wall_info =  $"Center: {wall_centers[0]} , Extent: {wall_extents[0]}";
-        StateDisplayText.GetComponent<TextMeshPro>().text = $"Click Count: {count}\n{message_string}\n{debug_wall_info}";
+        StateDisplayText.GetComponent<TextMeshPro>().text = $"{message_string}";
     }
 
 }
