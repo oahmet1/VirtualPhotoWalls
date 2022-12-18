@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Microsoft.MixedReality.Toolkit.Experimental.SceneUnderstanding;
 using Microsoft.MixedReality.Toolkit.Experimental.SpatialAwareness;
 using Microsoft.MixedReality.Toolkit.SpatialAwareness;
 using System.Collections.Generic;
