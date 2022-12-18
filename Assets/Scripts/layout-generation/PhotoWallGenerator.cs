@@ -72,7 +72,7 @@ public class PhotoWallGenerator : MonoBehaviour
         for (int i = 0; i < walls.Length; i++)
         {
             debug.text = "Wall " + i + " of " + walls.Length;
-            layouts[i] = algo.GenerateLayout(photos ,walls[i] );
+            layouts[i] = algo.GenerateLayout(photos ,walls[i],numberOfPhotosAtEachWall, AlgorithmParameter );
             debug.text = "Wall " + i + " of " + walls.Length + " done";
             numPhotos += layouts[i].photos.Length;
         }
@@ -128,7 +128,7 @@ public class PhotoWallGenerator : MonoBehaviour
         for (int i = 0; i < walls.Length; i++)
         {
             debug.text = "Wall " + i + " of " + walls.Length;
-            layouts[i] = algo.GenerateLayout(photos, walls[i]);
+            layouts[i] = algo.GenerateLayout(photos, walls[i], numberOfPhotosAtEachWall, AlgorithmParameter);
             debug.text = "Wall " + i + " of " + walls.Length + " done";
             numPhotos += layouts[i].photos.Length;
             yield return new WaitForSeconds(0.1f);

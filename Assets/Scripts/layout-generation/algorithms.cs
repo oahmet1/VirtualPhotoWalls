@@ -1,27 +1,12 @@
 using System.Collections;
 using UnityEngine;
 interface ILayoutAlgorithm {
-    Layout GenerateLayout(Photograph[] photos, Wall wall);
+    Layout GenerateLayout(Photograph[] photos, Wall wall, int NumberofPhotosEachWall, int AlgorithmParameter);
 }
 
-class RandomLayoutAlgorithm {
-    public void GenerateLayout(Photograph[] photos, Wall wall) {
-        System.Random rnd = new System.Random();
-
-        float[] boundsX = wall.GetBoundsX();
-        float[] boundsY = wall.GetBoundsY();
-
-        for (int i=0; i < photos.Length; i++) {
-            float x = boundsX[0] + (float)rnd.NextDouble() * (-boundsX[0] + boundsX[1]);
-            float y = boundsY[0] + (float)rnd.NextDouble() * (-boundsY[0] + boundsY[1]);
-
-            photos[i].SetPosition(x, y, 0);
-        }
-    }
-} 
-
 class NoOverlapRandomLayoutAlgorithm : ILayoutAlgorithm {
-    public Layout GenerateLayout(Photograph[] photos, Wall wall) {
+    public Layout GenerateLayout(Photograph[] photos, Wall wall, int NumberofPhotosEachWall, int AlgorithmParameter) 
+    {
         System.Random rnd = new System.Random();
 
         float[] boundsX = wall.GetBoundsX();
@@ -30,7 +15,8 @@ class NoOverlapRandomLayoutAlgorithm : ILayoutAlgorithm {
 
         ArrayList displayedPhotos = new ArrayList();
 
-        for (int i=0; i < photos.Length; i++) {
+        int numphotos = Mathf.Min(NumberofPhotosEachWall, photos.Length);
+        for (int i=0; i < numphotos; i++) {
             float width = photos[i].width;
             float height = photos[i].height;
             if(-boundsX[0] + boundsX[1] - 2*width < 0 || -boundsY[0] + boundsY[1] - 2*height < 0){
@@ -128,14 +114,16 @@ class LayoutAlgorithm : ILayoutAlgorithm {
             angle %= 2 * Mathf.PI;
         }
     }
-    public Layout GenerateLayout(Photograph[] photos, Wall wall) {
+    public Layout GenerateLayout(Photograph[] photos, Wall wall, int NumberofPhotosEachWall, int AlgorithmParameter)
+    {
         
         System.Random rnd = new System.Random();
         //get the first image randomly and place it in the middle of the wall
         ArrayList displayedPhotos = new ArrayList();
         ArrayList notDisplayedPhotos = new ArrayList(photos);
 
-        for(int i=0; i<photos.Length; i++){
+        int numphotos = Mathf.Min(NumberofPhotosEachWall, photos.Length);
+        for (int i=0; i< numphotos; i++){
             notDisplayedPhotos.Add(photos[i]);
         }
 
@@ -144,8 +132,9 @@ class LayoutAlgorithm : ILayoutAlgorithm {
         
         float r = GetRadius(displayedPhotos, wall);
         int numCircles = 0;
-        while (r <  Mathf.Min(wall.height/2, wall.width/2) && numCircles <= 0){
-            placePhotosOnCircle(wall, photos, displayedPhotos, r, 0, 0);
+        while (r <  Mathf.Min(wall.height/2, wall.width/2) && numCircles <= AlgorithmParameter)
+        {
+            placePhotosOnCircle(wall, photos, notDisplayedPhotos, r, 0, 0);
             r = GetRadius(displayedPhotos, wall);
             numCircles++;
         }
