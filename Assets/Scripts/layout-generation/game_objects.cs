@@ -38,7 +38,8 @@ public class Photograph
         return new Photograph(width, height, x, y, z, bytes);
     }
     
-    public void Draw(float[] rotationAngles, float[] centerCoordinates, Transform parent, Wall wall, GameObject PhotoPrefab){
+    public void Draw(float[] rotationAngles, float[] centerCoordinates, Transform parent, Wall wall, GameObject PhotoPrefab,
+    Material bboxMaterial, Material bboxMaterialGrabbed, Material bboxHandleWhite, Material bboxHandleBlueGrabbed, GameObject bboxHandlePrefab, GameObject bboxHandleSlatePrefab, GameObject bboxHandleRotationPrefab){
         
         
         var debug = GameObject.Find("DebugBox").GetComponent<TextMeshPro>();
@@ -53,6 +54,26 @@ public class Photograph
 
         //var photo = GameObject.CreatePrimitive(PrimitiveType.Cube);
         var photo = GameObject.Instantiate(PhotoPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
+        BoundsControl boundsControl = photo.GetComponent<BoundsControl>();
+        BoxDisplayConfiguration boxConfiguration = boundsControl.BoxDisplayConfig;
+        boxConfiguration.BoxMaterial = bboxMaterial;
+        boxConfiguration.BoxGrabbedMaterial = bboxMaterialGrabbed;
+        ScaleHandlesConfiguration scaleHandleConfiguration = boundsControl.ScaleHandlesConfig;
+        scaleHandleConfiguration.HandleMaterial = bboxHandleWhite;
+        scaleHandleConfiguration.HandleGrabbedMaterial = bboxHandleBlueGrabbed;
+        scaleHandleConfiguration.HandlePrefab = bboxHandlePrefab;
+        scaleHandleConfiguration.HandleSlatePrefab = bboxHandleSlatePrefab;
+        scaleHandleConfiguration.HandleSize = 0.016f;
+        scaleHandleConfiguration.ColliderPadding = Vector3.one * 0.016f;
+        RotationHandlesConfiguration rotationHandleConfiguration = boundsControl.RotationHandlesConfig;
+        rotationHandleConfiguration.HandleMaterial = bboxHandleWhite;
+        rotationHandleConfiguration.HandleGrabbedMaterial = bboxHandleBlueGrabbed;
+        rotationHandleConfiguration.HandlePrefab = bboxHandleRotationPrefab;
+        rotationHandleConfiguration.HandleSize = 0.016f;
+        rotationHandleConfiguration.ColliderPadding = Vector3.one * 0.016f;
+        ProximityEffectConfiguration proximityEffectConfiguration = boundsControl.HandleProximityEffectConfig;
+        proximityEffectConfiguration.ProximityEffectActive = true;
+
         //// set up proper bounding boxes
         //BoundsControl bbox = photo.AddComponent<BoundsControl>();
         //bbox.BoundsControlActivation = Microsoft.MixedReality.Toolkit.UI.BoundsControlTypes.BoundsControlActivationType.ActivateByProximityAndPointer;

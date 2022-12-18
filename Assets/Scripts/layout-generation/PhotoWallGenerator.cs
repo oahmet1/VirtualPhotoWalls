@@ -13,9 +13,11 @@ public class Layout
         this.photos = photos;
     }
 
-    public void  Draw(float[] rotationAngles, float[] centerCoordinates, Transform parent, Wall wall, GameObject PhotoPrefab){
+    public void  Draw(float[] rotationAngles, float[] centerCoordinates, Transform parent, Wall wall, GameObject PhotoPrefab,
+    Material bboxMaterial, Material bboxMaterialGrabbed, Material bboxHandleWhite, Material bboxHandleBlueGrabbed, GameObject bboxHandlePrefab, GameObject bboxHandleSlatePrefab, GameObject bboxHandleRotationPrefab){
         foreach(Photograph photo in photos){
-            photo.Draw(rotationAngles, centerCoordinates, parent, wall, PhotoPrefab);
+            photo.Draw(rotationAngles, centerCoordinates, parent, wall, PhotoPrefab,
+            bboxMaterial, bboxMaterialGrabbed, bboxHandleWhite, bboxHandleBlueGrabbed, bboxHandlePrefab, bboxHandleSlatePrefab, bboxHandleRotationPrefab);
         }
     }
 }
@@ -33,6 +35,14 @@ public class PhotoWallGenerator : MonoBehaviour
     public int AlgorithmParameter;
     public GameObject PhotoPrefab;
     public GameObject DebugTextMesh;
+    
+    public Material bboxMaterial;
+    public Material bboxMaterialGrabbed;
+    public Material bboxHandleWhite;
+    public Material bboxHandleBlueGrabbed;
+    public GameObject bboxHandlePrefab;
+    public GameObject bboxHandleSlatePrefab;
+    public GameObject bboxHandleRotationPrefab;
 
     public bool is_running= false;
     public void GenerateLayout(Wall[] walls, Photograph[] photos)
@@ -74,7 +84,8 @@ public class PhotoWallGenerator : MonoBehaviour
         {
             debug.text = "Wall " + i + " of " + walls.Length + "drawing";
             if (layouts[i] != null){
-                layouts[i].Draw(walls[i].rotationAngles, walls[i].centerCoordinates, walls[i].transform, walls[i], PhotoPrefab);
+                layouts[i].Draw(walls[i].rotationAngles, walls[i].centerCoordinates, walls[i].transform, walls[i], PhotoPrefab,
+                    bboxMaterial, bboxMaterialGrabbed, bboxHandleWhite, bboxHandleBlueGrabbed, bboxHandlePrefab, bboxHandleSlatePrefab, bboxHandleRotationPrefab);
             } else {
                 line = -1000000000;
             }
@@ -132,7 +143,8 @@ public class PhotoWallGenerator : MonoBehaviour
             debug.text = "Wall " + i + " of " + walls.Length + "drawing";
             if (layouts[i] != null)
             {
-                layouts[i].Draw(walls[i].rotationAngles, walls[i].centerCoordinates, walls[i].transform, walls[i], PhotoPrefab);
+                layouts[i].Draw(walls[i].rotationAngles, walls[i].centerCoordinates, walls[i].transform, walls[i], PhotoPrefab,
+                    bboxMaterial, bboxMaterialGrabbed, bboxHandleWhite, bboxHandleBlueGrabbed, bboxHandlePrefab, bboxHandleSlatePrefab, bboxHandleRotationPrefab);
                 yield return new WaitForSeconds(0.1f);
             }
             else
