@@ -32,7 +32,7 @@ MonoBehaviour:
   requestMeshData: 1
   inferRegions: 0
   firstAutoUpdateDelay: 1
-  worldMeshLevelOfDetail: 1
+  worldMeshLevelOfDetail: 0
   usePersistentObjects: 1
   queryRadius: 5
   requestOcclusionMask: 1
