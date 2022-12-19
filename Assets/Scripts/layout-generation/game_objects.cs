@@ -44,8 +44,8 @@ public class Photograph
     Material bboxMaterial, Material bboxMaterialGrabbed, Material bboxHandleWhite, Material bboxHandleBlueGrabbed, GameObject bboxHandlePrefab, GameObject bboxHandleSlatePrefab, GameObject bboxHandleRotationPrefab){
         
         
-        var debug = GameObject.Find("DebugBox").GetComponent<TextMeshPro>();
-        debug.text = "Drawing photo";
+        //var debug = GameObject.Find("DebugBox").GetComponent<TextMeshPro>();
+        //debug.text = "Drawing photo";
         int line = 1;
 
         try{
@@ -132,14 +132,11 @@ public class Photograph
             line = line + 1;
 
         //textmesh.GetComponent<TextMesh>().text = "Done Drawing photo, assigned material";
-
-
        
-        debug.text = "Just Generating Layout";
         }
         catch(Exception ex){
             //throw divide by zero exception
-            debug.text = "Drawing photo error on line " + line + " " + ex;
+           
         }
     
     }

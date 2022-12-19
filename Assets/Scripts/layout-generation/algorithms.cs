@@ -134,7 +134,7 @@ class LayoutAlgorithm : ILayoutAlgorithm {
         int numCircles = 0;
         while (r <  Mathf.Min(wall.height/2, wall.width/2) && numCircles <= AlgorithmParameter)
         {
-            placePhotosOnCircle(wall, photos, notDisplayedPhotos, r, 0, 0);
+            placePhotosOnCircle(wall, photos, displayedPhotos, r, 0, 0);
             r = GetRadius(displayedPhotos, wall);
             numCircles++;
         }

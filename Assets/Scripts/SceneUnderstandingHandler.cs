@@ -69,13 +69,15 @@ public class SceneUnderstandingHandler : MonoBehaviour
         wall_rotations = new List<Quaternion>();
         wall_extents   = new List<Vector3>();
 
+        StateDisplayText.GetComponent<TextMeshPro>().text = $"Loading!Please Wait!";
+
         FileReader Reader = new FileReader();
-        photos = await Reader.ReadFiles(text_mesh_walls);
+        photos = await Reader.ReadFiles();
        
         //instantiatedPrefabs = new List<GameObject>();
         //if (Application.isEditor) { observer.}
 
-        StateDisplayText.GetComponent<TextMeshPro>().text = $"Loading!";
+       
         is_scanning = true;
         DisplayWalls();
         observer.Initialize();
@@ -341,7 +343,7 @@ public class SceneUnderstandingHandler : MonoBehaviour
             ChangeMaterial(OcclusionMaterial);
             //UpdateWallInfo();
             DisplayImages();
-            text_mesh_walls.GetComponent<TextMeshPro>().text = $"DisplayImagesreturned";
+            if(text_mesh_walls) text_mesh_walls.GetComponent<TextMeshPro>().text = $"DisplayImagesreturned";
             message_string = $"{observedWalls.Count} Walls Detected!";
         }
 
