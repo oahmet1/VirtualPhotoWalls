@@ -181,4 +181,9 @@ public class PhotoWallGenerator : MonoBehaviour
             layout.Clear();
         }
     }
+    public void CheckDropDown(int val) 
+    {
+        if (val == 2) { AlgorithmType = AlgorithmTypes.CircularLayout;  Debug.Log("Value Changed!"); } 
+        else AlgorithmType = AlgorithmTypes.RandomLayout;
+    }
 }
